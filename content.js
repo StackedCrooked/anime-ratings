@@ -121,6 +121,9 @@ app.htmlDecode = function(input) {
 app.findAndReplace = function(input, mapping) {
     var result = input;
     for (var key in mapping) {
+        if (!mapping.hasOwnProperty(key)) {
+            continue;
+        }
         var value = mapping[key];
         var count = 0;
         while (result.search(key) !== -1) {
@@ -260,22 +263,28 @@ app.improveTitle = function(title) {
 
     var result = title;
 
-    for (var tkey in app.malQueryInfo.replace) {
-        if (result.search(tkey) !== -1) {
-            result = app.malQueryInfo.replace[tkey];
+    for (var replace_key in app.malQueryInfo.replace) {
+            if (!app.malQueryInfo.replace.hasOwnProperty(replace_key)) {
+                continue;
+            }
+        if (result.search(replace_key) !== -1) {
+            result = app.malQueryInfo.replace[replace_key];
             break;
         }
     }
 
-    for (var fkey in app.malQueryInfo.improve) {
-        var fragment = app.malQueryInfo.improve[fkey];
+    for (var fragment_key in app.malQueryInfo.improve) {
+            if (!app.malQueryInfo.improve.hasOwnProperty(fragment_key)) {
+                continue;
+            }
+        var fragment = app.malQueryInfo.improve[fragment_key];
         var count = 0;
-        while (result.search(fkey) !== -1 && count < 10) {
-            result = result.replace(fkey, fragment);
+        while (result.search(fragment_key) !== -1 && count < 10) {
+            result = result.replace(fragment_key, fragment);
             count++;
         }
         if (count >= 10) {
-            this.log("Problematic replacement: " + result + ", with key: " + fkey);
+            this.log("Problematic replacement: " + result + ", with key: " + fragment_key);
         }
     }
 
@@ -970,7 +979,6 @@ if (app.malQueryInfo === undefined) {
             "Shin Megami Tensei: Persona 4" : "Shin Megami",
             "Sono Hanabira ni Kuchizuke o" : "Sono Hanabira ni Kuchizuke wo",
             "Space Battleship Yamato: Resurrection" : "Miyamoto Musashi: Souken ni Haseru Yume",
-            "Super Robot Wars Original Generation: The Inspector" : "Super Robot Taisen OG: The Inspector",
             "Super Robot Wars Original Generation: The Inspector" : "Super Robot Taisen OG: The Inspector",
             "The Guin Saga" : "Guin Saga",
             "The Tower of Druaga" : "Druaga no Tou",
