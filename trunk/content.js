@@ -78,9 +78,12 @@ app.getLinks = function() {
 };
 
 
-app.encodeResult = function(title) {
+/**
+ * Make the text "innerHTML"-compatible.
+ */
+app.encodeResult = function(text) {
 
-    var result = title;
+    var result = text;
     var keys = [];
     var values = [];
     keys.push(/&Atilde;&copy;/g); values.push("&eacute;");
@@ -111,6 +114,10 @@ app.encodeResult = function(title) {
 };
 
 
+/**
+ * Decodes HTML entities. For example it converts "&lt;" back into "<".
+ * @param input
+ */
 app.htmlDecode = function(input) {
     var e = document.createElement('div');
     e.innerHTML = input;
