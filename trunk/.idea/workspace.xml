@@ -27,7 +27,7 @@
       <file leaf-file-name="background.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/background.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="20" selection-start="264" selection-end="264" vertical-scroll-proportion="-3.0">
+            <state line="70" column="48" selection-start="1854" selection-end="1880" vertical-scroll-proportion="33.6">
               <folding />
             </state>
           </provider>
@@ -36,7 +36,7 @@
       <file leaf-file-name="content.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/content.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="419" column="12" selection-start="11447" selection-end="11447" vertical-scroll-proportion="-9.780521">
+            <state line="419" column="12" selection-start="11447" selection-end="11447" vertical-scroll-proportion="-8.587106">
               <folding />
             </state>
           </provider>
@@ -241,13 +241,6 @@
         <state line="180" column="19" selection-start="3398" selection-end="3398" vertical-scroll-proportion="0.3329384" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/background.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="20" selection-start="264" selection-end="264" vertical-scroll-proportion="-3.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/manifest.json">
       <provider selected="true" editor-type-id="text-editor">
         <state line="12" column="20" selection-start="430" selection-end="445" vertical-scroll-proportion="0.0">
@@ -255,9 +248,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/background.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="70" column="48" selection-start="1854" selection-end="1880" vertical-scroll-proportion="33.6">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/content.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="419" column="12" selection-start="11447" selection-end="11447" vertical-scroll-proportion="-9.780521">
+        <state line="419" column="12" selection-start="11447" selection-end="11447" vertical-scroll-proportion="-8.587106">
           <folding />
         </state>
       </provider>
