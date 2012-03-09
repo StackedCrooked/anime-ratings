@@ -406,7 +406,6 @@ app.getAnimeTitleFromPage = function() {
     if (typeof(titles[0].innerHTML) === "string") {
         var title = titles[0].innerHTML.split(" -")[0];
         return title;
-
     }
 
     throw "Failed to get Wikipedia page title";
