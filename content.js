@@ -393,17 +393,20 @@ app.isYearList = function() {
 
 
 app.getAnimeTitleFromPage = function() {
-    var headings = document.getElementsByTagName("h1");
-    if (headings.length === 0) {
-        throw "H1 not found in page";
+    var titles = document.getElementsByTagName("title");
+    if (titles.length === 0) {
+        throw "No title tag found in page. Can't deduce page title."
     }
 
-    if (typeof(headings[0].childNodes[0].nodeValue) === "string") {
-        return headings[0].childNodes[0].nodeValue;
+    if (typeof(titles[0].nodeValue) === "string") {
+        var title = titles[0].nodeValue.split(" -")[0];
+        return title;
     }
 
-    if (typeof(headings[0].childNodes[0].innerHTML) === "string") {
-        return headings[0].childNodes[0].innerHTML;
+    if (typeof(titles[0].innerHTML) === "string") {
+        var title = titles[0].innerHTML.split(" -")[0];
+        return title;
+
     }
 
     throw "Failed to get Wikipedia page title";
