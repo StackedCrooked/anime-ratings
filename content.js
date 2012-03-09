@@ -1,3 +1,16 @@
+// Begin Google analytics
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-25154311-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = 'https://ssl.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+// End Google analytics
+
+
 function AnimeRatings() {
 }
 
@@ -854,6 +867,7 @@ app.isVisibilityTresholdChanged = function() {
     if (app.visibilityTreshold !== app.getVisibilityTreshold()) {
         app.visibilityTreshold = app.getVisibilityTreshold();
         localStorage["visibilityTreshold"] = app.visibilityTreshold;
+        _gaq.push(['_trackEvent', 'VisibilityTreshold_' + app.visibilityTreshold, 'changed']);
         return true;
     }
 
@@ -864,6 +878,7 @@ app.isVisibilityTresholdChanged = function() {
 app.isHighlightTresholdChanged = function() {
     if (app.highlightTreshold !== app.getHighlightTreshold()) {
         app.highlightTreshold = app.getHighlightTreshold();
+        _gaq.push(['_trackEvent', 'HighlightTreshold_' + app.visibilityTreshold, 'changed']);
         localStorage["highlightTreshold"] = app.highlightTreshold;
         return true;
     }
