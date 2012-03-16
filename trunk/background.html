@@ -18,6 +18,11 @@ _gaq.push(['_trackPageview']);
 try {
 
 
+function trackEvent(arg) {
+    _gaq.push(['_trackEvent', arg.category, arg.label, arg.value]);
+}
+
+
 // Manifest info object
 chrome.manifest = (function() {
 
@@ -211,6 +216,9 @@ chrome.extension.onRequest.addListener( function(request, sender, callback) {
     }
     else if (request.action === "getMalInfo") {
         getMalInfo(request.arg, callback);
+    }
+    else if (request.action === "trackEvent") {
+        trackEvent(request.arg);
     }
     else {
         throw "Invalid request: " + JSON.stringify(request);

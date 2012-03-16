@@ -1,15 +1,3 @@
-// Begin Google analytics
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-25154311-1']);
-_gaq.push(['_trackPageview']);
-
-(function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = 'https://ssl.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
-// End Google analytics
-
 
 function AnimeRatings() {
 }
@@ -33,6 +21,12 @@ app.log = function(message) {
         function() {}
     );
 };
+
+
+//! @param arg example is { category: 'VisibilityTreshold', label: 'Changed', value: app.visibilityTreshold }
+app.trackEvent  = function(args) {
+    this.sendRequest({action: "trackEvent", arg: args});
+}
 
 
 app.getMALInfo = function(pageType, title, callback) {
@@ -412,13 +406,11 @@ app.getAnimeTitleFromPage = function() {
     }
 
     if (typeof(titles[0].nodeValue) === "string") {
-        var title = titles[0].nodeValue.split(" -")[0];
-        return title;
+        return titles[0].nodeValue.split(" -")[0];
     }
 
     if (typeof(titles[0].innerHTML) === "string") {
-        var title = titles[0].innerHTML.split(" -")[0];
-        return title;
+        return titles[0].innerHTML.split(" -")[0];
     }
 
     throw "Failed to get Wikipedia page title";
@@ -869,7 +861,7 @@ app.isVisibilityTresholdChanged = function() {
     if (app.visibilityTreshold !== app.getVisibilityTreshold()) {
         app.visibilityTreshold = app.getVisibilityTreshold();
         localStorage["visibilityTreshold"] = app.visibilityTreshold;
-        _gaq.push(['_trackEvent', 'VisibilityTreshold_' + app.visibilityTreshold, 'changed']);
+        app.trackEvent({ category: 'VisibilityTreshold', label: 'Changed', value: app.visibilityTreshold });
         return true;
     }
 
@@ -880,8 +872,8 @@ app.isVisibilityTresholdChanged = function() {
 app.isHighlightTresholdChanged = function() {
     if (app.highlightTreshold !== app.getHighlightTreshold()) {
         app.highlightTreshold = app.getHighlightTreshold();
-        _gaq.push(['_trackEvent', 'HighlightTreshold_' + app.visibilityTreshold, 'changed']);
         localStorage["highlightTreshold"] = app.highlightTreshold;
+        app.trackEvent({ category: 'HighlightTreshold', label: 'Changed', value: app.highlightTreshold });
         return true;
     }
 
@@ -1054,6 +1046,7 @@ if (app.malQueryInfo === undefined) {
 
 app.run = function() {
     if (app.isYearList()) {
+        app.trackEvent({ category: 'YearList', label: 'Loaded', value: document.URL });
         app.insertSettingsBox();
         app.insertRatingsIntoList();
         app.updateScore();
@@ -1066,6 +1059,7 @@ app.run = function() {
         }
 
         if (app.pageType.search(/anime/) !== -1 || app.pageType.search(/manga/) !== -1) {
+            app.trackEvent({ category: 'AnimePage', label: 'Loaded', value: document.URL });
             app.insertRatingsIntoPage();
         }
     }
