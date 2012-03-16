@@ -27,7 +27,7 @@
       <file leaf-file-name="background.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/background.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="70" column="48" selection-start="1854" selection-end="1880" vertical-scroll-proportion="-43.75">
+            <state line="19" column="0" selection-start="515" selection-end="515" vertical-scroll-proportion="-4.26">
               <folding />
             </state>
           </provider>
@@ -36,7 +36,7 @@
       <file leaf-file-name="content.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/content.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="534" column="5" selection-start="14160" selection-end="14160" vertical-scroll-proportion="0.31410256">
+            <state line="1069" column="11" selection-start="31760" selection-end="31767" vertical-scroll-proportion="0.92970824">
               <folding />
             </state>
           </provider>
@@ -45,7 +45,7 @@
       <file leaf-file-name="manifest.json" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/manifest.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="20" selection-start="430" selection-end="445" vertical-scroll-proportion="0.0">
+            <state line="2" column="18" selection-start="49" selection-end="49" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -66,6 +66,8 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
+        <option value="$PROJECT_DIR$/manifest.json" />
+        <option value="$PROJECT_DIR$/background.html" />
         <option value="$PROJECT_DIR$/content.js" />
       </list>
     </option>
@@ -244,19 +246,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/manifest.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="20" selection-start="430" selection-end="445" vertical-scroll-proportion="0.0" />
+        <state line="2" column="18" selection-start="49" selection-end="49" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/background.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="70" column="48" selection-start="1854" selection-end="1880" vertical-scroll-proportion="-43.75">
+        <state line="19" column="0" selection-start="515" selection-end="515" vertical-scroll-proportion="-4.26">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/content.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="534" column="5" selection-start="14160" selection-end="14160" vertical-scroll-proportion="0.31410256">
+        <state line="1069" column="11" selection-start="31760" selection-end="31767" vertical-scroll-proportion="0.92970824">
           <folding />
         </state>
       </provider>
