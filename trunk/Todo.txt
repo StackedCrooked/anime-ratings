@@ -1,3 +1,4 @@
+- Remove hard-coded mappings.
 - Maintain a pure mapping between wikipedia and mal urls. The current system of improving search terms and improving results is way too messy.
 - Add a "Add" button to add to MAL.
 - Visibility treshold should also hide the original link.
