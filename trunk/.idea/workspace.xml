@@ -27,7 +27,7 @@
       <file leaf-file-name="background.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/background.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="0" selection-start="515" selection-end="515" vertical-scroll-proportion="-4.26">
+            <state line="19" column="0" selection-start="515" selection-end="515" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -36,7 +36,7 @@
       <file leaf-file-name="content.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/content.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1069" column="11" selection-start="31760" selection-end="31767" vertical-scroll-proportion="0.92970824">
+            <state line="195" column="56" selection-start="5287" selection-end="5287" vertical-scroll-proportion="0.59151196">
               <folding />
             </state>
           </provider>
@@ -244,23 +244,19 @@
         <state line="180" column="19" selection-start="3398" selection-end="3398" vertical-scroll-proportion="0.3329384" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/manifest.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="18" selection-start="49" selection-end="49" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/background.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="0" selection-start="515" selection-end="515" vertical-scroll-proportion="-4.26">
-          <folding />
-        </state>
+        <state line="19" column="0" selection-start="515" selection-end="515" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/manifest.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="18" selection-start="49" selection-end="49" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/content.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1069" column="11" selection-start="31760" selection-end="31767" vertical-scroll-proportion="0.92970824">
+        <state line="195" column="56" selection-start="5287" selection-end="5287" vertical-scroll-proportion="0.59151196">
           <folding />
         </state>
       </provider>

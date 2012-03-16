@@ -181,8 +181,20 @@ app.fixUnicode = function(input) {
 
 
 app.getYear = function() {
-    var components = document.URL.split("_");
-    return components[components.length - 1];
+    var categorySplit = document.URL.split("Category:");
+    if (categorySplit.length < 2) {
+        return "";
+    }
+
+    var categoryName = categorySplit[1];
+    var yearSplit = categoryName.split("_");
+    if (yearSplit.length < 2) {
+        return "";
+    }
+
+    var yearString = yearSplit[0];
+    var year = parseInt(yearString, 10); // could be NaN
+    return "" + year;
 };
 
 
