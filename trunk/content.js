@@ -225,8 +225,9 @@ app.addEntryToDOM = function(parent, entry, pattern) {
 app.informFailure = function(node, linkItem) {
     var reason = (linkItem.reason === undefined ? "No results returned." : linkItem.reason);
     var parent = node.parentNode;
-    parent = parent.createEntryList().create("li");
-    parent.createText(reason);
+    var li = parent.createEntryList().create("li");
+    li.createText(reason);
+    app.failedLis.push(li);
 };
 
 
@@ -919,6 +920,7 @@ app.updateScoreImpl = function() {
     {
         app.forceUpdateScore = false;
 
+        // Toggle visibility of entries depending on the visibility and highlight tresholds.
         for (var i = 0; i < app.malLinks.length; ++i) {
             var malLink = app.malLinks[i];
             var linkScore = app.getMALLinkScore(malLink);
@@ -941,6 +943,22 @@ app.updateScoreImpl = function() {
                 malLink.style.display = "none";
             }
         }
+
+        // Toggle visibility of entries that contain error messages rather than MAL links.
+        for (var i = 0; i < app.failedLis.length; ++i) {
+            var li = app.failedLis[i];
+
+            // Floating-point comparison.
+            if (app.getVisibilityTreshold() < 0.1) {
+                li.style.display = "list-item";
+            }
+            else {
+                li.style.display = "none";
+            }
+        }
+
+
+
     }
     window.setTimeout(app.updateScoreImpl, 500);
 };
@@ -952,6 +970,7 @@ app.updateScoreImpl = function() {
 try {
 
 app.malLinks = [];
+app.failedLis = []; // 'li' elements that are used for error messages
 app.failedTitles = [];
 app.linkNodes = {};
 app.links = app.getLinks().reverse();
