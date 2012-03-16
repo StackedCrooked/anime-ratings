@@ -530,13 +530,15 @@ app.getPageTypeFromANNLinks = function() {
 
 
 app.getPageType = function() {
-    if (document.URL.search("Category:Anime_of_") !== -1) {
+    if (document.URL.toLowerCase().search(/category:.*anime/) !== -1) {
         return "anime";
     }
-    else if (document.URL.search("Category:Manga_of_") !== -1) {
+    else if (document.URL.toLowerCase().search(/category:.*manga/) !== -1) {
         return "manga";
     }
-    return "";
+    else {
+        return "";
+    }
 };
 
 app.workerCount = 5;
