@@ -23,13 +23,13 @@ app.log = function(message) {
 };
 
 
-//! @param arg example is { category: 'VisibilityTreshold', action: 'Changed', label: app.visibilityTreshold }
-app.trackEvent  = function(args) {
-    this.sendRequest({action: "trackEvent", arg: args});
-}
+//! @param arg example is { category: 'Configuration', action: 'Changed', label: "Visibility treshold" , value: app.visibilityTreshold }
+app.trackEvent = function (args) {
+    this.sendRequest({action:"trackEvent", arg:args});
+};
 
 
-app.setLocalStorage = function(key, value) {
+app.setLocalStorage = function (key, value) {
     try {
         localStorage.setItem(key, value);
     }
@@ -38,7 +38,7 @@ app.setLocalStorage = function(key, value) {
         app.log("Clearing localStorage.");
         localStorage.clear();
     }
-}
+};
 
 
 app.getMALInfo = function(pageType, title, callback) {
@@ -886,7 +886,7 @@ app.isVisibilityTresholdChanged = function() {
     if (app.visibilityTreshold !== app.getVisibilityTreshold()) {
         app.visibilityTreshold = app.getVisibilityTreshold();
         app.setLocalStorage("visibilityTreshold", app.visibilityTreshold);
-        app.trackEvent({ category: 'VisibilityTreshold', action: 'Changed', label: app.visibilityTreshold.toString(10) });
+        app.trackEvent({ category: 'Configuration', action: 'Changed', label: "Visibility treshold", value: app.visibilityTreshold });
         return true;
     }
 
@@ -898,7 +898,7 @@ app.isHighlightTresholdChanged = function() {
     if (app.highlightTreshold !== app.getHighlightTreshold()) {
         app.highlightTreshold = app.getHighlightTreshold();
         app.setLocalStorage("highlightTreshold", app.highlightTreshold);
-        app.trackEvent({ category: 'HighlightTreshold', action: 'Changed', label: app.highlightTreshold.toString(10) });
+        app.trackEvent({ category: 'Configuration', action: 'Changed', label: "Highlight treshold", value: app.highlightTreshold });
         return true;
     }
 
@@ -933,8 +933,8 @@ app.updateScoreImpl = function() {
         app.forceUpdateScore = false;
 
         // Toggle visibility of entries depending on the visibility and highlight tresholds.
-        for (var i = 0; i < app.malLinks.length; ++i) {
-            var malLink = app.malLinks[i];
+        for (var linkIndex = 0; linkIndex < app.malLinks.length; ++linkIndex) {
+            var malLink = app.malLinks[linkIndex];
             var linkScore = app.getMALLinkScore(malLink);
 
             if (linkScore >= app.getHighlightTreshold()) {
@@ -957,8 +957,8 @@ app.updateScoreImpl = function() {
         }
 
         // Toggle visibility of entries that contain error messages rather than MAL links.
-        for (var i = 0; i < app.failedLis.length; ++i) {
-            var li = app.failedLis[i];
+        for (var liIndex = 0; liIndex < app.failedLis.length; ++liIndex) {
+            var li = app.failedLis[liIndex];
 
             // Floating-point comparison.
             if (app.getVisibilityTreshold() < 0.1) {
@@ -1075,7 +1075,7 @@ if (app.malQueryInfo === undefined) {
     app.getMalQueryInfo(function(response) {
         if (response.success === true) {
             app.malQueryInfo = JSON.parse(response.value);
-            if (app.malQueryInfo.replace === undefined || app.malQueryInfo.improve === undefined) {
+            if (undefined === app.malQueryInfo.replace || app.malQueryInfo.improve === undefined) {
                 throw "MAL query info is missing the 'replace' or 'improve' fields.";
             }
         }
@@ -1089,7 +1089,7 @@ if (app.malQueryInfo === undefined) {
 
 app.run = function() {
     if (app.isYearList()) {
-        app.trackEvent({ category: 'YearList', label: 'Loaded', value: document.URL });
+        app.trackEvent({ category: 'YearList', action: 'Loaded', label: document.URL });
         app.insertSettingsBox();
         app.insertRatingsIntoList();
         app.updateScore();
@@ -1102,7 +1102,7 @@ app.run = function() {
         }
 
         if (app.pageType.search(/anime/) !== -1 || app.pageType.search(/manga/) !== -1) {
-            app.trackEvent({ category: 'AnimePage', label: 'Loaded', value: document.URL });
+            app.trackEvent({ category: 'AnimePage', action: 'Loaded', label: document.URL });
             app.insertRatingsIntoPage();
         }
     }

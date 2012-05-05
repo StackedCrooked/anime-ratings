@@ -19,7 +19,12 @@ try {
 
 
 function trackEvent(arg) {
-    _gaq.push(['_trackEvent', arg.category, arg.action, arg.label]);
+    if (arg.value !== undefined) {
+        _gaq.push(['_trackEvent', arg.category, arg.action, arg.label, arg.value]);
+    }
+    else {
+        _gaq.push(['_trackEvent', arg.category, arg.action, arg.label]);
+    }
 }
 
 
@@ -86,7 +91,7 @@ function setLocalStorage(key, value) {
     }
     catch (exc) {
         console.log("Setting localStorage failed. Reason: " + exc);
-        console.log("Clearing localStorage.")
+        console.log("Clearing localStorage.");
         localStorage.clear();
     }
 }
@@ -136,8 +141,7 @@ function getWeekCounter() {
 }
 
 function getCacheKey(pageType, title) {
-    var result = "version: " + chrome.manifest.version + ", age: " + getWeekCounter() + ", page_type: " + pageType + ", title: " + title;
-    return result;
+    return "version: " + chrome.manifest.version + ", age: " + getWeekCounter() + ", page_type: " + pageType + ", title: " + title;
 }
 
 function getMalInfo(arg, callback) {
@@ -230,6 +234,7 @@ else if (request.action === "getMalInfo") {
     getMalInfo(request.arg, callback);
 }
 else if (request.action === "trackEvent") {
+    console.log("Tracking event: " + JSON.stringify(request.arg));
     trackEvent(request.arg);
 }
 else {
