@@ -955,22 +955,6 @@ app.updateScoreImpl = function() {
                 malLink.style.display = "none";
             }
         }
-
-        // Toggle visibility of entries that contain error messages rather than MAL links.
-        for (var liIndex = 0; liIndex < app.failedLis.length; ++liIndex) {
-            var li = app.failedLis[liIndex];
-
-            // Floating-point comparison.
-            if (app.getVisibilityTreshold() < 0.1) {
-                li.style.display = "list-item";
-            }
-            else {
-                li.style.display = "none";
-            }
-        }
-
-
-
     }
     window.setTimeout(app.updateScoreImpl, 500);
 };
