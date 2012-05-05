@@ -427,7 +427,7 @@ app.isYearList = function() {
 app.getAnimeTitleFromPage = function() {
     var titles = document.getElementsByTagName("title");
     if (titles.length === 0) {
-        throw "No title tag found in page. Can't deduce page title."
+        throw "No title tag found in page. Can't deduce page title.";
     }
 
     if (typeof(titles[0].nodeValue) === "string") {
