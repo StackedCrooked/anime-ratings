@@ -19,7 +19,7 @@ try {
 
 
 function trackEvent(arg) {
-    _gaq.push(['_trackEvent', arg.category, arg.label, arg.value]);
+    _gaq.push(['_trackEvent', arg.category, arg.action, arg.label]);
 }
 
 
@@ -80,6 +80,17 @@ function searchMAL(pageType, title, callback) {
     });
 }
 
+function setLocalStorage(key, value) {
+    try {
+        localStorage.setItem(key, value);
+    }
+    catch (exc) {
+        console.log("Setting localStorage failed. Reason: " + exc);
+        console.log("Clearing localStorage.")
+        localStorage.clear();
+    }
+}
+
 function getMalQueryInfo(callback) {
     var url = "http://stacked-crooked.googlecode.com/svn/trunk/Playground/AnimeRatings/ChromePlugin/config/malQuery.json";
     var key = JSON.stringify({
@@ -91,14 +102,7 @@ function getMalQueryInfo(callback) {
     if (value === null) {
         console.log("Key '" + key + "' not in cache => perform API call.");
         performHTTPGETRequest(url, "", function(response) {
-            try {
-                localStorage.setItem(key, JSON.stringify(response));
-            }
-            catch (exc) {
-                localStorage.clear();
-                console.log(exc);
-            }
-
+            setLocalStorage(key, JSON.stringify(response));
             callback(response);
         });
     }
@@ -122,13 +126,7 @@ function getFirstUseEpoch() {
     var result = localStorage.getItem("epoch_first_use");
     if (result === null) {
         result = getEpochSeconds();
-        try {
-            localStorage.setItem("epoch_first_use", result);
-        }
-        catch (exc) {
-            localStorage.clear();
-            console.log(exc);
-        }
+        setLocalStorage("epoch_first_use", result);
     }
     return result;
 }
@@ -215,36 +213,31 @@ function getMalInfo(arg, callback) {
             result.success = false;
         }
 
-        try {
-            localStorage.setItem(getCacheKey(arg.pageType, arg.title), JSON.stringify(result));
-        }
-        catch (exc) {
-            localStorage.clear();
-            console.log(exc);
-        }
+        setLocalStorage(getCacheKey(arg.pageType, arg.title), JSON.stringify(result));
         callback(result);
     });
 }
 
 chrome.extension.onRequest.addListener( function(request, sender, callback) {
-    if (request.action === "log") {
-        console.log(request.arg);
-    }
-    else if (request.action === "getMalQueryInfo") {
-        getMalQueryInfo(callback);
-    }
-    else if (request.action === "getMalInfo") {
-        getMalInfo(request.arg, callback);
-    }
-    else if (request.action === "trackEvent") {
-        trackEvent(request.arg);
-    }
-    else {
-        throw "Invalid request: " + JSON.stringify(request);
-    }
+
+if (request.action === "log") {
+    console.log(request.arg);
+}
+else if (request.action === "getMalQueryInfo") {
+    getMalQueryInfo(callback);
+}
+else if (request.action === "getMalInfo") {
+    getMalInfo(request.arg, callback);
+}
+else if (request.action === "trackEvent") {
+    trackEvent(request.arg);
+}
+else {
+    throw "Invalid request: " + JSON.stringify(request);
+}
 });
 
 }catch(exc) {
-    console.log(exc);
+console.log(exc);
 }
 </script>
