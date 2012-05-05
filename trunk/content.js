@@ -23,9 +23,21 @@ app.log = function(message) {
 };
 
 
-//! @param arg example is { category: 'VisibilityTreshold', label: 'Changed', value: app.visibilityTreshold }
+//! @param arg example is { category: 'VisibilityTreshold', action: 'Changed', label: app.visibilityTreshold }
 app.trackEvent  = function(args) {
     this.sendRequest({action: "trackEvent", arg: args});
+}
+
+
+app.setLocalStorage = function(key, value) {
+    try {
+        localStorage.setItem(key, value);
+    }
+    catch (exc) {
+        app.log("Setting localStorage failed. Reason: " + exc);
+        app.log("Clearing localStorage.");
+        localStorage.clear();
+    }
 }
 
 
@@ -873,14 +885,8 @@ app.setHighlightTreshold = function(highlightTreshold) {
 app.isVisibilityTresholdChanged = function() {
     if (app.visibilityTreshold !== app.getVisibilityTreshold()) {
         app.visibilityTreshold = app.getVisibilityTreshold();
-        try {
-            localStorage["visibilityTreshold"] = app.visibilityTreshold;
-        }
-        catch (exc) {
-            localStorage.clear();
-            app.log(exc);
-        }
-        app.trackEvent({ category: 'VisibilityTreshold', label: 'Changed', value: app.visibilityTreshold });
+        app.setLocalStorage("visibilityTreshold", app.visibilityTreshold);
+        app.trackEvent({ category: 'VisibilityTreshold', action: 'Changed', label: app.visibilityTreshold.toString(10) });
         return true;
     }
 
@@ -891,14 +897,8 @@ app.isVisibilityTresholdChanged = function() {
 app.isHighlightTresholdChanged = function() {
     if (app.highlightTreshold !== app.getHighlightTreshold()) {
         app.highlightTreshold = app.getHighlightTreshold();
-        try {
-            localStorage["highlightTreshold"] = app.highlightTreshold;
-        }
-        catch (exc) {
-            localStorage.clear();
-            app.log(exc);
-        }
-        app.trackEvent({ category: 'HighlightTreshold', label: 'Changed', value: app.highlightTreshold });
+        app.setLocalStorage("highlightTreshold", app.highlightTreshold);
+        app.trackEvent({ category: 'HighlightTreshold', action: 'Changed', label: app.highlightTreshold.toString(10) });
         return true;
     }
 
