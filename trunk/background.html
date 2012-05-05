@@ -89,9 +89,16 @@ function getMalQueryInfo(callback) {
     });
     var value = localStorage.getItem(key);
     if (value === null) {
-        console.log("getMalQueryInfo: Key '" + key + "' not found.");
+        console.log("Key '" + key + "' not in cache => perform API call.");
         performHTTPGETRequest(url, "", function(response) {
-            localStorage.setItem(key, JSON.stringify(response));
+            try {
+                localStorage.setItem(key, JSON.stringify(response));
+            }
+            catch (exc) {
+                localStorage.clear();
+                console.log(exc);
+            }
+
             callback(response);
         });
     }
@@ -115,7 +122,13 @@ function getFirstUseEpoch() {
     var result = localStorage.getItem("epoch_first_use");
     if (result === null) {
         result = getEpochSeconds();
-        localStorage.setItem("epoch_first_use", result);
+        try {
+            localStorage.setItem("epoch_first_use", result);
+        }
+        catch (exc) {
+            localStorage.clear();
+            console.log(exc);
+        }
     }
     return result;
 }
@@ -202,7 +215,13 @@ function getMalInfo(arg, callback) {
             result.success = false;
         }
 
-        localStorage.setItem(getCacheKey(arg.pageType, arg.title), JSON.stringify(result));
+        try {
+            localStorage.setItem(getCacheKey(arg.pageType, arg.title), JSON.stringify(result));
+        }
+        catch (exc) {
+            localStorage.clear();
+            console.log(exc);
+        }
         callback(result);
     });
 }

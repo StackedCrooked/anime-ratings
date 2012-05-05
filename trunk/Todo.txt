@@ -1,5 +1,6 @@
 Todo
 ----
+- Fix localstorage limits.
 - Remove hard-coded mappings.
 - Use [+] and [-] to expand and collapse the ratings that go with a title.
 v Improve Google Analytics. Track usage of all features.

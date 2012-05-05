@@ -873,7 +873,13 @@ app.setHighlightTreshold = function(highlightTreshold) {
 app.isVisibilityTresholdChanged = function() {
     if (app.visibilityTreshold !== app.getVisibilityTreshold()) {
         app.visibilityTreshold = app.getVisibilityTreshold();
-        localStorage["visibilityTreshold"] = app.visibilityTreshold;
+        try {
+            localStorage["visibilityTreshold"] = app.visibilityTreshold;
+        }
+        catch (exc) {
+            localStorage.clear();
+            app.log(exc);
+        }
         app.trackEvent({ category: 'VisibilityTreshold', label: 'Changed', value: app.visibilityTreshold });
         return true;
     }
@@ -885,7 +891,13 @@ app.isVisibilityTresholdChanged = function() {
 app.isHighlightTresholdChanged = function() {
     if (app.highlightTreshold !== app.getHighlightTreshold()) {
         app.highlightTreshold = app.getHighlightTreshold();
-        localStorage["highlightTreshold"] = app.highlightTreshold;
+        try {
+            localStorage["highlightTreshold"] = app.highlightTreshold;
+        }
+        catch (exc) {
+            localStorage.clear();
+            app.log(exc);
+        }
         app.trackEvent({ category: 'HighlightTreshold', label: 'Changed', value: app.highlightTreshold });
         return true;
     }
