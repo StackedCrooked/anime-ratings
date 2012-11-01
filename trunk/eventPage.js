@@ -1,4 +1,12 @@
 
+function trackEvent(arg) {
+  "use strict";
+  if (arg.value !== undefined) {
+    _gaq.push(['_trackEvent', arg.category, arg.action, arg.label, arg.value]);
+  } else {
+    _gaq.push(['_trackEvent', arg.category, arg.action, arg.label]);
+  }
+}
 
 
 // Manifest info object
