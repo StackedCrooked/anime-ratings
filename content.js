@@ -1,6 +1,6 @@
 /*jslint browser: true*/
 /*global $, chrome*/
-/*global $, chrome.extension*/
+/*chrome $, extension*/
 
 var app = {};
 app.highlightTreshold = 8;
@@ -10,7 +10,7 @@ app.annLinks = [];
 
 app.sendMessage = function (arg, callback) {
   "use strict";
-  window["chrome"]["extension"]["sendMessage"](arg, function (response) {
+  chrome.extension.sendMessage(arg, function (response) {
 
     callback(response);
   });
@@ -18,25 +18,24 @@ app.sendMessage = function (arg, callback) {
 
 
 app.log = function (message) {
-  this.sendMessage(
-    {action:"log", arg:message},
-    function () {
-    }
-  );
+  "use strict";
+  this.sendMessage({action: "log", arg: message}, function () {
+  });
 };
 
 
 //! @param arg example is { category: 'Configuration', action: 'Changed', label: "Visibility treshold" , value: app.visibilityTreshold }
 app.trackEvent = function (args) {
-  this.sendMessage({action:"trackEvent", arg:args});
+  "use strict";
+  this.sendMessage({action: "trackEvent", arg: args});
 };
 
 
 app.setLocalStorage = function (key, value) {
+  "use strict";
   try {
     localStorage.setItem(key, value);
-  }
-  catch (exc) {
+  } catch (exc) {
     app.log("Setting localStorage failed. Reason: " + exc);
     app.log("Clearing localStorage.");
     localStorage.clear();
@@ -45,27 +44,28 @@ app.setLocalStorage = function (key, value) {
 
 
 app.getMALInfo = function (pageType, title, callback) {
+  "use strict";
   var linkInfo = {};
   linkInfo.title = title;
   linkInfo.pageType = pageType;
-  this.sendMessage(
-    {action:"getMalInfo", arg:linkInfo},
-    function (linkInfo) {
-      callback(linkInfo);
-    }
-  );
+  this.sendMessage({action: "getMalInfo", arg: linkInfo}, function (linkInfo) {
+    callback(linkInfo);
+  });
 };
 
 
 app.getMalQueryInfo = function (callback) {
-  this.sendMessage({action:"getMalQueryInfo", arg:{}}, callback);
+  "use strict";
+  this.sendMessage({action: "getMalQueryInfo", arg: {}}, callback);
 };
 
 
 app.getMWPages = function () {
-  var divs = document.getElementsByTagName("div");
-  for (var i = 0; i < divs.length; ++i) {
-    if (divs[i].id == "mw-pages") {
+  "use strict";
+  var i, divs;
+  divs = document.getElementsByTagName("div");
+  for (i = 0; i < divs.length; i += 1) {
+    if (divs[i].id === "mw-pages") {
       return divs[i];
     }
   }
@@ -74,25 +74,22 @@ app.getMWPages = function () {
 
 
 app.debugLink = "";
-app.excludeLink = "";
 
 
 app.getLinks = function () {
-  var result = [];
+  "use strict";
+  var i, result;
+  result = [];
   try {
     var lis = this.getMWPages().getElementsByTagName("li");
-    for (var i = 0; i < lis.length; ++i) {
+    for (i = 0; i < lis.length; ++i) {
       var links = lis[i].getElementsByTagName("a");
       if (links.length > 0) {
         var linkNode = links[0];
-        if (linkNode.title.search(app.debugLink) !== -1 &&
-          linkNode.title.search(app.excludeLink === -1)) {
-          result.push(linkNode);
-        }
+        result.push(linkNode);
       }
     }
-  }
-  catch (exc) {
+  } catch (exc) {
     // MW pages not found on this page.
     // This can happen for summary pages like "Category:Anime_of_the_2000s"
   }
@@ -104,10 +101,11 @@ app.getLinks = function () {
  * Make the text "innerHTML"-compatible.
  */
 app.encodeResult = function (text) {
-
-  var result = text;
-  var keys = [];
-  var values = [];
+  "use strict";
+  var i, result, keys, values;
+  result = text;
+  keys = [];
+  values = [];
   keys.push(/&Atilde;&copy;/g);
   values.push("&eacute;");
   keys.push(/&Atilde;&uml;/g);
@@ -148,7 +146,7 @@ app.encodeResult = function (text) {
   keys.push(/&uuml;/g);
   values.push("ü");
 
-  for (var i = 0; i < keys.length; ++i) {
+  for (i = 0; i < keys.length; i += 1) {
     result = result.replace(keys[i], values[i]);
   }
   return result;
@@ -160,6 +158,7 @@ app.encodeResult = function (text) {
  * @param input
  */
 app.htmlDecode = function (input) {
+  "use strict";
   var e = document.createElement('div');
   e.innerHTML = input;
   return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
@@ -167,6 +166,7 @@ app.htmlDecode = function (input) {
 
 
 app.findAndReplace = function (input, mapping) {
+  "use strict";
   var result = input;
   for (var key in mapping) {
     if (!mapping.hasOwnProperty(key)) {
@@ -194,27 +194,29 @@ app.findAndReplace = function (input, mapping) {
  * for common cases.
  */
 app.fixUnicode = function (input) {
+  "use strict";
   var result = input;
 
   // First apply a mapping of composed keys
   result = this.findAndReplace(result, {
-    "&acirc;��&acirc;��&acirc;��":"☆☆☆",
-    "&Atilde;�&Atilde;�&Atilde;�":"xxx",
-    "&acirc;��":"-"
+    "&acirc;��&acirc;��&acirc;��": "☆☆☆",
+    "&Atilde;�&Atilde;�&Atilde;�": "xxx",
+    "&acirc;��": "-"
   });
 
   // Then map remaining individual keys
   result = this.findAndReplace(result, {
-    "&Atilde;&copy;":"é",
-    "&acirc;�&ordf;":"♪",
-    "&acirc;�":"†",
-    "&Aring;�":"ō"
+    "&Atilde;&copy;": "é",
+    "&acirc;�&ordf;": "♪",
+    "&acirc;�": "†",
+    "&Aring;�": "ō"
   });
   return result;
 };
 
 
 app.getYear = function () {
+  "use strict";
   var categorySplit = document.URL.split("Category:");
   if (categorySplit.length < 2) {
     return "";
@@ -236,6 +238,7 @@ app.getYear = function () {
  * @pattern  String  "{Year} {Title} {Score}"
  */
 app.addEntryToDOM = function (parent, entry, pattern) {
+  "use strict";
 
   parent = parent.create("li");
 
@@ -257,6 +260,7 @@ app.addEntryToDOM = function (parent, entry, pattern) {
 
 
 app.informFailure = function (node, linkItem) {
+  "use strict";
   var reason = (linkItem.reason === undefined ? "No results returned." : linkItem.reason);
   var parent = node.parentNode;
   var li = parent.createEntryList().create("li");
@@ -266,6 +270,7 @@ app.informFailure = function (node, linkItem) {
 
 
 app.addEntriesToDOM = function (node, linkItem) {
+  "use strict";
   var parent = node.parentNode;
 
 
@@ -301,17 +306,13 @@ app.addEntriesToDOM = function (node, linkItem) {
       }
 
       // Insert title entry
-      this.addEntryToDOM(parent,
-        entry,
-        "{Title} ({Score})");
-    }
-    catch (exc) {
+      this.addEntryToDOM(parent, entry, "{Title} ({Score})");
+    } catch (exc) {
       app.log(exc);
     }
   }
 
-  if (parent.hasAttribute("private_year_is_wrong") &&
-    parent.getElementsByTagName("li").length === 0) {
+  if (parent.hasAttribute("private_year_is_wrong") && parent.getElementsByTagName("li").length === 0) {
     parent.create("li").createText("No " + app.getPageType() + " titles returned from " + year + ".");
   }
 };
@@ -321,6 +322,7 @@ app.addEntriesToDOM = function (node, linkItem) {
  * Workaround: improves search results
  */
 app.improveTitle = function (title) {
+  "use strict";
 
   var result = title;
 
@@ -357,26 +359,29 @@ app.improveTitle = function (title) {
 
 
 Element.prototype.toggle = function () {
+  "use strict";
   if (this.style.display != 'none') {
     this.style.display = 'none';
-  }
-  else {
+  } else {
     this.style.display = '';
   }
 };
 
 
 Element.prototype.createText = function (text) {
+  "use strict";
   this.appendChild(document.createTextNode(text));
 };
 
 
 Element.prototype.createNBSP = function () {
+  "use strict";
   this.appendChild(document.createTextNode("\u00a0"));
 };
 
 
 Element.prototype.create = function (tagNamePath) {
+  "use strict";
   var result = this;
   var tagNames = tagNamePath.split("/");
   for (var i = 0; i < tagNames.length; ++i) {
@@ -389,6 +394,7 @@ Element.prototype.create = function (tagNamePath) {
 
 
 Element.prototype.createEntryList = function () {
+  "use strict";
   var result = this.create("small/ul");
   result.style.listStyle = "square outside none";
   return result;
@@ -396,6 +402,7 @@ Element.prototype.createEntryList = function () {
 
 
 app.printFailedTitles = function () {
+  "use strict";
   // Show all failed titles.
   var allFailedTitles = "";
   for (var i = 0; i < app.failedTitles.length; i++) {
@@ -409,6 +416,7 @@ app.printFailedTitles = function () {
 
 
 app.getNext = function () {
+  "use strict";
   if (app.links.length === 0) {
     app.updateScore();
     //app.printFailedTitles();
@@ -424,27 +432,26 @@ app.getNext = function () {
       var node = app.linkNodes[title];
       if (linkInfo.success === true) {
         app.addEntriesToDOM(node, linkInfo);
-      }
-      else {
+      } else {
         app.failedTitles.push(title);
         app.informFailure(node, linkInfo);
       }
       app.getNext();
     });
-  }
-  else {
+  } else {
     app.log("Title already being processed: " + title);
   }
 };
 
 
 app.isYearList = function () {
-  return app.getPageType() === "anime" ||
-    app.getPageType() === "manga";
+  "use strict";
+  return app.getPageType() === "anime" || app.getPageType() === "manga";
 };
 
 
 app.getAnimeTitleFromPage = function () {
+  "use strict";
   var titles = document.getElementsByTagName("title");
   if (titles.length === 0) {
     throw "No title tag found in page. Can't deduce page title.";
@@ -467,13 +474,13 @@ app.getAnimeTitleFromPage = function () {
  * Returns null if not found.
  */
 app.getANNLinks = function () {
+  "use strict";
   var result = [];
   var links = document.getElementsByTagName("a");
   for (var i = 0; i < links.length; ++i) {
     var link = links[i];
     var href = link.href;
-    if (href.search("http://www.animenewsnetwork.com/encyclopedia/manga") !== -1 ||
-      href.search("http://www.animenewsnetwork.com/encyclopedia/anime") !== -1) {
+    if (href.search("http://www.animenewsnetwork.com/encyclopedia/manga") !== -1 || href.search("http://www.animenewsnetwork.com/encyclopedia/anime") !== -1) {
       result.push(href);
     }
   }
@@ -482,6 +489,7 @@ app.getANNLinks = function () {
 
 
 app.getPageTypeFromInfoBox = function () {
+  "use strict";
   var foundAnime = false;
   var foundManga = false;
   var tables = document.getElementsByTagName("table");
@@ -501,8 +509,7 @@ app.getPageTypeFromInfoBox = function () {
 
         var value = td.childNodes[0].nodeValue;
 
-        if (value.search(/TV anime/) !== -1 ||
-          value.search(/Original video animation/) !== -1) {
+        if (value.search(/TV anime/) !== -1 || value.search(/Original video animation/) !== -1) {
           foundAnime = true;
         }
 
@@ -569,11 +576,9 @@ app.getPageTypeFromANNLinks = function () {
 app.getPageType = function () {
   if (document.URL.toLowerCase().search(/category:.*anime/) !== -1) {
     return "anime";
-  }
-  else if (document.URL.toLowerCase().search(/category:.*manga/) !== -1) {
+  } else if (document.URL.toLowerCase().search(/category:.*manga/) !== -1) {
     return "manga";
-  }
-  else {
+  } else {
     return "";
   }
 };
@@ -627,8 +632,7 @@ app.sortEntriesByDate = function (entries) {
   entries.sort(function (lhs, rhs) {
     if (lhs.start_date < rhs.start_date) {
       return -1;
-    }
-    else if (lhs.start_date == rhs.start_date) {
+    } else if (lhs.start_date == rhs.start_date) {
       return 0;
     }
     return 1;
@@ -759,8 +763,7 @@ app.addRatingIntoAnimePageDOM = function (linkInfo) {
 
     if (startYear === 0) {
       year = "Unknown";
-    }
-    else if (startYear !== endYear) {
+    } else if (startYear !== endYear) {
       year += " - " + endYear;
     }
     td_year.createText(year);
@@ -906,7 +909,7 @@ app.isVisibilityTresholdChanged = function () {
   if (app.visibilityTreshold !== app.getVisibilityTreshold()) {
     app.visibilityTreshold = app.getVisibilityTreshold();
     app.setLocalStorage("visibilityTreshold", app.visibilityTreshold);
-    app.trackEvent({ category:'Configuration', action:'Changed', label:"Visibility treshold", value:app.visibilityTreshold });
+    app.trackEvent({ category: 'Configuration', action: 'Changed', label: "Visibility treshold", value: app.visibilityTreshold });
     return true;
   }
 
@@ -918,7 +921,7 @@ app.isHighlightTresholdChanged = function () {
   if (app.highlightTreshold !== app.getHighlightTreshold()) {
     app.highlightTreshold = app.getHighlightTreshold();
     app.setLocalStorage("highlightTreshold", app.highlightTreshold);
-    app.trackEvent({ category:'Configuration', action:'Changed', label:"Highlight treshold", value:app.highlightTreshold });
+    app.trackEvent({ category: 'Configuration', action: 'Changed', label: "Highlight treshold", value: app.highlightTreshold });
     return true;
   }
 
@@ -946,9 +949,7 @@ app.updateScore = function () {
 
 
 app.updateScoreImpl = function () {
-  if (app.forceUpdateScore === true ||
-    app.isHighlightTresholdChanged() ||
-    app.isVisibilityTresholdChanged()) {
+  if (app.forceUpdateScore === true || app.isHighlightTresholdChanged() || app.isVisibilityTresholdChanged()) {
     app.forceUpdateScore = false;
 
     // Toggle visibility of entries depending on the visibility and highlight tresholds.
@@ -959,8 +960,7 @@ app.updateScoreImpl = function () {
       if (linkScore >= app.getHighlightTreshold()) {
         malLink.firstChild.style.fontWeight = "bold";
         malLink.firstChild.style.backgroundColor = "yellow";
-      }
-      else {
+      } else {
         malLink.firstChild.style.fontWeight = "normal";
         malLink.firstChild.style.backgroundColor = "inherit";
       }
@@ -969,8 +969,7 @@ app.updateScoreImpl = function () {
       // enough ratings to calculate a weighted average.
       if (linkScore === 0 || linkScore >= app.getVisibilityTreshold()) {
         malLink.style.display = "list-item";
-      }
-      else {
+      } else {
         malLink.style.display = "none";
       }
     }
@@ -994,84 +993,84 @@ try {
   if (app.malQueryInfo === undefined) {
 
     app.defaultMalQueryInfo = {
-      "replace":{
-        "11eyes: Tsumi to Batsu to Aganai no Shōjo":"11eyes",
-        "A Channel":"A-Channel",
-        "Aki Sora":"Aki-Sora",
-        "Ano Hi Mita Hana":"Ano Hi Mita Hana",
-        "Cardfight Vanguard":"Cardfight!! Vanguard",
-        "Chibi Devi!":"Chibi Devi",
-        "Doraemon":"Doraemon",
-        "Dungeon Fighter Online":"Arad Senki: Slap Up Party",
-        "Everyday Mum":"Mainichi Kaasan",
-        "Fresh Pretty Cure":"Fresh Precure!",
-        "GA Geijutsuka Art Design Class":"GA: Geijutsuka Art Design Class",
-        "Hayate the Combat Butler!":"Hayate",
-        "Heaven's Lost Property":"Heaven's Lost Property",
-        "Hetalia: Axis Powers":"Hetalia Axis Powers",
-        "Higurashi When They Cry":"Higurashi no Naku Koro ni",
-        "Horizon in the Middle of Nowhere":"Kyoukai Senjou no Horizon",
-        "Hyakka Ryōran Samurai Girls":"Hyakka Ryouran: Samurai Girls",
-        "Infinite Stratos":"Infinite Stratos",
-        "Koishinasai":"Koi Shinasai",
-        "Kon'nichiwa Anne":"Konnichiwa Anne",
-        "Kyō, Koi o Hajimemasu":"Kyou, Koi wo Hajimemasu",
-        "List of Kemono no Souja Erin episodes":"Kemono no Souja Eri",
-        "Lupin the 3rd vs Detective Conan":"Lupin III vs. Detective Conan",
-        "Mai Mai Miracle":"Mai Mai Shinko to Sennen no Mahou",
-        "Maid Sama!":"Kaichou wa Maid-sama!",
-        "Mawaru-Penguindrum":"Mawaru Penguindrum",
-        "Mazinkaizer":"Mazinkaiser",
-        "Naruto Shippuden The Movie: The Lost Tower":"Naruto: Shippuuden Movie 4 - The Lost Tower",
-        "Naruto Shippuuden The Movie: Inheritors of the Will of Fire":"Naruto: Shippuuden Movie 3",
-        "Negima! Magister Negi Magi":"Negima",
-        "Oh My Goddess":"My Goddess",
-        "One Piece Film: Strong World":"One Piece: Strong World",
-        "Ore no Imōto ga Konna ni Kawaii Wake ga Nai":"Ore no Imouto ga Konnani Kawaii Wake ga Nai",
-        "Pandane to tamago hime":"Pandane to Tamago-hime",
-        "Phantom of Inferno":"Phantom: Requiem for the Phantom",
-        "Phi Brain: Puzzle of God":"Phi Brain: Kami no Puzzle",
-        "Poppy Hill":"Kokurikozaka Kara",
-        "Pretty Cure All Stars DX2: Light of Hope – Protect the Rainbow Jewel!":"Eiga Precure All Stars DX2: Kibou no Hikari - Rainbow Jewel wo Mamore!",
-        "Psychiatrist Irabu series":"Kuuchuu Buranko",
-        "Queen's Blade Rebellion":"Queen's Blade: Rebellion",
-        "Samurai Harem: Asu no Yoichi":"Asu no Yoichi!",
-        "Sayonara, Zetsubou-Sensei":"Sayonara Zetsubou Sensei",
-        "Sengoku Basara: Samurai Kings":"Sengoku Basara",
-        "Sengoku Paradise":"Kiwami",
-        "Shin Mazinger Shougeki! Z Hen":"Shin Mazinger Shougeki! Z-Hen",
-        "Shin Megami Tensei: Persona 4":"Shin Megami",
-        "Sono Hanabira ni Kuchizuke o":"Sono Hanabira ni Kuchizuke wo",
-        "Space Battleship Yamato: Resurrection":"Miyamoto Musashi: Souken ni Haseru Yume",
-        "Super Robot Wars Original Generation: The Inspector":"Super Robot Taisen OG: The Inspector",
-        "The Guin Saga":"Guin Saga",
-        "The Tower of Druaga":"Druaga no Tou",
-        "To Aru Kagaku no Railgun":"Toaru Kagaku no Railgun",
-        "Victini and Reshiram and White":"Pokemon Best Wishes! the Movie: Victini to Shiroki Eiyuu Reshiram",
-        "Yondemasuyo":"Yondemasu yo",
-        "Ōkami Kakushi":"Ookami Kakushi",
-        "Ōkami-san":"Ookami-san"
+      "replace": {
+        "11eyes: Tsumi to Batsu to Aganai no Shōjo": "11eyes",
+        "A Channel": "A-Channel",
+        "Aki Sora": "Aki-Sora",
+        "Ano Hi Mita Hana": "Ano Hi Mita Hana",
+        "Cardfight Vanguard": "Cardfight!! Vanguard",
+        "Chibi Devi!": "Chibi Devi",
+        "Doraemon": "Doraemon",
+        "Dungeon Fighter Online": "Arad Senki: Slap Up Party",
+        "Everyday Mum": "Mainichi Kaasan",
+        "Fresh Pretty Cure": "Fresh Precure!",
+        "GA Geijutsuka Art Design Class": "GA: Geijutsuka Art Design Class",
+        "Hayate the Combat Butler!": "Hayate",
+        "Heaven's Lost Property": "Heaven's Lost Property",
+        "Hetalia: Axis Powers": "Hetalia Axis Powers",
+        "Higurashi When They Cry": "Higurashi no Naku Koro ni",
+        "Horizon in the Middle of Nowhere": "Kyoukai Senjou no Horizon",
+        "Hyakka Ryōran Samurai Girls": "Hyakka Ryouran: Samurai Girls",
+        "Infinite Stratos": "Infinite Stratos",
+        "Koishinasai": "Koi Shinasai",
+        "Kon'nichiwa Anne": "Konnichiwa Anne",
+        "Kyō, Koi o Hajimemasu": "Kyou, Koi wo Hajimemasu",
+        "List of Kemono no Souja Erin episodes": "Kemono no Souja Eri",
+        "Lupin the 3rd vs Detective Conan": "Lupin III vs. Detective Conan",
+        "Mai Mai Miracle": "Mai Mai Shinko to Sennen no Mahou",
+        "Maid Sama!": "Kaichou wa Maid-sama!",
+        "Mawaru-Penguindrum": "Mawaru Penguindrum",
+        "Mazinkaizer": "Mazinkaiser",
+        "Naruto Shippuden The Movie: The Lost Tower": "Naruto: Shippuuden Movie 4 - The Lost Tower",
+        "Naruto Shippuuden The Movie: Inheritors of the Will of Fire": "Naruto: Shippuuden Movie 3",
+        "Negima! Magister Negi Magi": "Negima",
+        "Oh My Goddess": "My Goddess",
+        "One Piece Film: Strong World": "One Piece: Strong World",
+        "Ore no Imōto ga Konna ni Kawaii Wake ga Nai": "Ore no Imouto ga Konnani Kawaii Wake ga Nai",
+        "Pandane to tamago hime": "Pandane to Tamago-hime",
+        "Phantom of Inferno": "Phantom: Requiem for the Phantom",
+        "Phi Brain: Puzzle of God": "Phi Brain: Kami no Puzzle",
+        "Poppy Hill": "Kokurikozaka Kara",
+        "Pretty Cure All Stars DX2: Light of Hope – Protect the Rainbow Jewel!": "Eiga Precure All Stars DX2: Kibou no Hikari - Rainbow Jewel wo Mamore!",
+        "Psychiatrist Irabu series": "Kuuchuu Buranko",
+        "Queen's Blade Rebellion": "Queen's Blade: Rebellion",
+        "Samurai Harem: Asu no Yoichi": "Asu no Yoichi!",
+        "Sayonara, Zetsubou-Sensei": "Sayonara Zetsubou Sensei",
+        "Sengoku Basara: Samurai Kings": "Sengoku Basara",
+        "Sengoku Paradise": "Kiwami",
+        "Shin Mazinger Shougeki! Z Hen": "Shin Mazinger Shougeki! Z-Hen",
+        "Shin Megami Tensei: Persona 4": "Shin Megami",
+        "Sono Hanabira ni Kuchizuke o": "Sono Hanabira ni Kuchizuke wo",
+        "Space Battleship Yamato: Resurrection": "Miyamoto Musashi: Souken ni Haseru Yume",
+        "Super Robot Wars Original Generation: The Inspector": "Super Robot Taisen OG: The Inspector",
+        "The Guin Saga": "Guin Saga",
+        "The Tower of Druaga": "Druaga no Tou",
+        "To Aru Kagaku no Railgun": "Toaru Kagaku no Railgun",
+        "Victini and Reshiram and White": "Pokemon Best Wishes! the Movie: Victini to Shiroki Eiyuu Reshiram",
+        "Yondemasuyo": "Yondemasu yo",
+        "Ōkami Kakushi": "Ookami Kakushi",
+        "Ōkami-san": "Ookami-san"
       },
-      "improve":{
-        "×":"x",
-        "ō":"ou",
-        "Ō":"Ou",
-        "ū":"uu",
-        "ä":"a",
-        "Ä":"A",
-        "½":"1/2",
-        "&amp;":"&",
-        "(2009 film)":"",
-        "(anime)":"",
-        "(film)":"",
-        "(manga)":"",
-        "(movie)":"",
-        "(visual novel)":"",
-        "(novel)":"",
-        "(video game)":"",
-        "(novel series)":"",
-        "(Japanese series)":"",
-        "(TV series)":""
+      "improve": {
+        "×": "x",
+        "ō": "ou",
+        "Ō": "Ou",
+        "ū": "uu",
+        "ä": "a",
+        "Ä": "A",
+        "½": "1/2",
+        "&amp;": "&",
+        "(2009 film)": "",
+        "(anime)": "",
+        "(film)": "",
+        "(manga)": "",
+        "(movie)": "",
+        "(visual novel)": "",
+        "(novel)": "",
+        "(video game)": "",
+        "(novel series)": "",
+        "(Japanese series)": "",
+        "(TV series)": ""
       }
     };
 
@@ -1081,8 +1080,7 @@ try {
         if (undefined === app.malQueryInfo.replace || app.malQueryInfo.improve === undefined) {
           throw "MAL query info is missing the 'replace' or 'improve' fields.";
         }
-      }
-      else {
+      } else {
         app.log("Failed to get malQueryInfo. Resorting to default.");
         app.malQueryInfo = app.defaultMalQueryInfo;
       }
@@ -1092,12 +1090,11 @@ try {
 
   app.run = function () {
     if (app.isYearList()) {
-      app.trackEvent({ category:'YearList', action:'Loaded', label:document.URL });
+      app.trackEvent({ category: 'YearList', action: 'Loaded', label: document.URL });
       app.insertSettingsBox();
       app.insertRatingsIntoList();
       app.updateScore();
-    }
-    else {
+    } else {
       app.pageType = app.getPageTypeFromInfoBox();
 
       if (app.pageType === "") {
@@ -1105,7 +1102,7 @@ try {
       }
 
       if (app.pageType.search(/anime/) !== -1 || app.pageType.search(/manga/) !== -1) {
-        app.trackEvent({ category:'AnimePage', action:'Loaded', label:document.URL });
+        app.trackEvent({ category: 'AnimePage', action: 'Loaded', label: document.URL });
         app.insertRatingsIntoPage();
       }
     }
