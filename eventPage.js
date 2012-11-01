@@ -1,3 +1,24 @@
+/*jslint browser: true*/
+/*global $, DOMParser*/
+/*global $, chrome*/
+/*chrome $, extension*/
+/*chrome.extension $, onMessage*/
+
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-25154311-1']);
+_gaq.push(['_trackPageview']);
+
+
+(function () {
+  "use strict";
+  var ga, s;
+  ga = document.createElement('script');
+  ga.type = 'text/javascript';
+  ga.async = true;
+  ga.src = 'https://ssl.google-analytics.com/ga.js';
+  s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(ga, s);
+}());
 
 function trackEvent(arg) {
   "use strict";
@@ -11,7 +32,8 @@ function trackEvent(arg) {
 
 // Manifest info object
 //noinspection JSUnresolvedVariable
-window["chrome"]["manifest"] = (function () {
+window.chrome.manifest = (function () {
+  "use strict";
 
   var manifestObject = "";
   var xhr = new XMLHttpRequest();
@@ -21,7 +43,7 @@ window["chrome"]["manifest"] = (function () {
       manifestObject = JSON.parse(xhr.responseText);
     }
   };
-  xhr.open("GET", chrome.extension.getURL('/manifest.json'), false);
+  xhr.open("GET", window.chrome.extension.getURL('/manifest.json'), false);
 
   try {
     xhr.send();
@@ -30,18 +52,18 @@ window["chrome"]["manifest"] = (function () {
   }
 
   return manifestObject;
-})();
+}());
 
 function performHTTPGETRequest(url, auth, callback) {
+  "use strict";
   var http = new window.XMLHttpRequest();
   http.onreadystatechange = function () {
-    if (http.readyState == 4) {
-      if (http.status == 200) {
-        callback({success:true, value:http.responseText});
-      }
-      else {
+    if (http.readyState === 4) {
+      if (http.status === 200) {
+        callback({success: true, value: http.responseText});
+      } else {
         console.log("Failure (" + http.status + "): " + url);
-        callback({success:false, value:http.status});
+        callback({success: false, value: http.status});
       }
     }
   };
@@ -55,10 +77,12 @@ function performHTTPGETRequest(url, auth, callback) {
 }
 
 function getURL(pageType, title) {
+  "use strict";
   return "http://myanimelist.net/api/" + pageType + "/search.xml?q=" + encodeURIComponent(title);
 }
 
 function searchMAL(pageType, title, callback) {
+  "use strict";
   var auth = "Basic QW5pbWVSYXRpbmdzOkNocm9tZQ==";
   var url = getURL(pageType, title);
   performHTTPGETRequest(url, auth, function (response) {
@@ -67,22 +91,38 @@ function searchMAL(pageType, title, callback) {
 }
 
 function setLocalStorage(key, value) {
+  "use strict";
   try {
     localStorage.setItem(key, value);
-  }
-  catch (exc) {
+  } catch (exc) {
     console.log("Setting localStorage failed. Reason: " + exc);
     console.log("Clearing localStorage.");
     localStorage.clear();
   }
 }
 
+function getEpochSeconds() {
+  "use strict";
+  return Math.floor(new Date().getTime() / 1000);
+}
+
+function getWeekCounter() {
+  "use strict";
+  return Math.floor(getEpochSeconds() / (7 * 24 * 3600));
+}
+
+function getCacheKey(pageType, title) {
+  "use strict";
+  return "version: " + window.chrome.manifest.version + ", age: " + getWeekCounter() + ", page_type: " + pageType + ", title: " + title;
+}
+
 function getMalQueryInfo(callback) {
+  "use strict";
   var url = "http://stacked-crooked.googlecode.com/svn/trunk/Playground/AnimeRatings/ChromePlugin/config/malQuery.json";
   var key = JSON.stringify({
-    name:"MalQueryInfo",
-    week:getWeekCounter(),
-    version:chrome.manifest.version
+    name: "MalQueryInfo",
+    week: getWeekCounter(),
+    version: window.chrome.manifest.version
   });
   var value = localStorage.getItem(key);
   if (value === null) {
@@ -91,42 +131,21 @@ function getMalQueryInfo(callback) {
       setLocalStorage(key, JSON.stringify(response));
       callback(response);
     });
-  }
-  else {
+  } else {
     callback(JSON.parse(value));
   }
 }
 
 function getInnerText(node) {
+  "use strict";
   if (node.childNodes.length === 0) {
     return "";
   }
   return node.childNodes[0].nodeValue;
 }
 
-function getEpochSeconds() {
-  return Math.floor(new Date().getTime() / 1000);
-}
-
-function getFirstUseEpoch() {
-  var result = localStorage.getItem("epoch_first_use");
-  if (result === null) {
-    result = getEpochSeconds();
-    setLocalStorage("epoch_first_use", result);
-  }
-  return result;
-}
-
-function getWeekCounter() {
-  return Math.floor(getEpochSeconds() / (7 * 24 * 3600));
-}
-
-function getCacheKey(pageType, title) {
-  return "version: " + chrome.manifest.version + ", age: " + getWeekCounter() + ", page_type: " + pageType + ", title: " + title;
-}
-
 function getMalInfo(arg, callback) {
-
+  "use strict";
   var cacheValue = localStorage.getItem(getCacheKey(arg.pageType, arg.title));
   if (cacheValue !== null) {
     var result = JSON.parse(cacheValue);
@@ -137,22 +156,23 @@ function getMalInfo(arg, callback) {
   searchMAL(arg.pageType, arg.title, function (response) {
 
     var result = {
-      success:false,
-      entries:[]
+      success: false,
+      entries: []
     };
 
     if (response.success === false) {
       callback(result);
       return;
     }
+    var i, parser, xmlText, doc, entries;
 
-    var parser = new DOMParser();
-    var xmlText = response.value;
+    parser = new DOMParser();
+    xmlText = response.value;
     xmlText = xmlText.replace(/&/g, "%26");
-    var doc = parser.parseFromString(xmlText, "text/xml");
-    var entries = doc.getElementsByTagName("entry");
+    doc = parser.parseFromString(xmlText, "text/xml");
+    entries = doc.getElementsByTagName("entry");
 
-    for (var i = 0; i < entries.length; ++i) {
+    for (i = 0; i < entries.length; i += 1) {
       var node = entries[i];
 
       // Get english title or original title.
@@ -170,21 +190,20 @@ function getMalInfo(arg, callback) {
       var types = node.getElementsByTagName("type");
 
       if (titles.length === 1 && scores.length === 1 && ids.length === 1 &&
-        start_dates.length === 1 && end_dates.length === 1 && types.length === 1) {
+          start_dates.length === 1 && end_dates.length === 1 && types.length === 1) {
 
         var entry = {
-          pageType:arg.pageType,
-          title:getInnerText(titles[0]).replace(/%26/g, "&"),
-          score:getInnerText(scores[0]),
-          id:getInnerText(ids[0]),
-          start_date:getInnerText(start_dates[0]),
-          end_date:getInnerText(end_dates[0]),
-          type:getInnerText(types[0])
+          pageType: arg.pageType,
+          title: getInnerText(titles[0]).replace(/%26/g, "&"),
+          score: getInnerText(scores[0]),
+          id: getInnerText(ids[0]),
+          start_date: getInnerText(start_dates[0]),
+          end_date: getInnerText(end_dates[0]),
+          type: getInnerText(types[0])
         };
 
         result.entries.push(entry);
-      }
-      else {
+      } else {
         console.log(arg.title + ": failed to parse xml!");
         console.log(xmlText);
       }
@@ -192,8 +211,7 @@ function getMalInfo(arg, callback) {
 
     if (result.entries.length !== 0) {
       result.success = true;
-    }
-    else {
+    } else {
       result.reason = "Failed to parse XML response.";
       result.success = false;
     }
@@ -204,21 +222,18 @@ function getMalInfo(arg, callback) {
 }
 
 chrome.extension.onMessage.addListener(function (request, sender, callback) {
+  "use strict";
 
   if (request.action === "log") {
     console.log(request.arg);
-  }
-  else if (request.action === "getMalQueryInfo") {
+  } else if (request.action === "getMalQueryInfo") {
     getMalQueryInfo(callback);
-  }
-  else if (request.action === "getMalInfo") {
+  } else if (request.action === "getMalInfo") {
     getMalInfo(request.arg, callback);
-  }
-  else if (request.action === "trackEvent") {
+  } else if (request.action === "trackEvent") {
     console.log("Tracking event: " + JSON.stringify(request.arg));
     trackEvent(request.arg);
-  }
-  else {
+  } else {
     return false;
   }
   return true;
