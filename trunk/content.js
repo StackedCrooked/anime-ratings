@@ -82,7 +82,7 @@ app.getLinks = function () {
   result = [];
   try {
     var lis = this.getMWPages().getElementsByTagName("li");
-    for (i = 0; i < lis.length; ++i) {
+    for (i = 0; i < lis.length; i += 1) {
       var links = lis[i].getElementsByTagName("a");
       if (links.length > 0) {
         var linkNode = links[0];
@@ -167,8 +167,9 @@ app.htmlDecode = function (input) {
 
 app.findAndReplace = function (input, mapping) {
   "use strict";
-  var result = input;
-  for (var key in mapping) {
+  var key, result;
+  result = input;
+  for (key in mapping) {
     if (!mapping.hasOwnProperty(key)) {
       continue;
     }
@@ -206,10 +207,10 @@ app.fixUnicode = function (input) {
 
   // Then map remaining individual keys
   result = this.findAndReplace(result, {
-    "&Atilde;&copy;": "é",
-    "&acirc;�&ordf;": "♪",
-    "&acirc;�": "†",
-    "&Aring;�": "ō"
+    "&Atilde;&copy;" : "é",
+    "&acirc;�&ordf;" : "♪",
+    "&acirc;�"       : "†",
+    "&Aring;�"       : "ō"
   });
   return result;
 };
