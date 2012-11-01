@@ -7,8 +7,25 @@ app.highlightTreshold  = 8;
 app.visibilityTreshold = 6;
 app.annLinks = [];
 
+/**
+ * downloadURL performs simple blocking HTTP GET request and returns the result.
+ */
+/* currrently unused
+function downloadURL(url) {
+  var hiddenIFrameID = 'hiddenDownloader';
+  var iframe = document.getElementById(hiddenIFrameID);
+  if (iframe === null) {
+    iframe = document.createElement('iframe');
+    iframe.id = hiddenIFrameID;
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+  }
+  iframe.src = url;
+}*/
+
 
 app.sendRequest = function(arg, callback) {
+
     chrome.extension.sendRequest(arg, function(response) {
         callback(response);
     });
