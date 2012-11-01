@@ -12,7 +12,7 @@
     "128":"icon128.png"
   },
   "background":{
-    "scripts":["eventPage.js", "analytics.js"],
+    "scripts":["analytics.js", "eventPage.js"],
     "persistent":false
   },
   "content_scripts":[

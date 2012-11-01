@@ -1,8 +1,5 @@
 
-function AnimeRatings() {
-}
-
-var app = new AnimeRatings();
+var app = {};
 app.highlightTreshold  = 8;
 app.visibilityTreshold = 6;
 app.annLinks = [];
@@ -34,7 +31,7 @@ app.sendMessage = function(arg, callback) {
 app.log = function(message) {
     this.sendMessage(
         {action: "log", arg: message},
-        function() {}
+        function () {}
     );
 };
 
@@ -75,7 +72,7 @@ app.getMalQueryInfo = function(callback) {
 };
 
 
-app.getMWPages = function() {
+app.getMWPages = function () {
     var divs = document.getElementsByTagName("div");
     for (var i = 0; i < divs.length; ++i) {
         if (divs[i].id == "mw-pages") {
@@ -90,7 +87,7 @@ app.debugLink = "";
 app.excludeLink = "";
 
 
-app.getLinks = function() {
+app.getLinks = function () {
     var result = [];
     try {
         var lis = this.getMWPages().getElementsByTagName("li");
@@ -208,7 +205,7 @@ app.fixUnicode = function(input) {
 };
 
 
-app.getYear = function() {
+app.getYear = function () {
     var categorySplit = document.URL.split("Category:");
     if (categorySplit.length < 2) {
         return "";
@@ -350,7 +347,7 @@ app.improveTitle = function(title) {
 };
 
 
-Element.prototype.toggle = function() {
+Element.prototype.toggle = function () {
 	if (this.style.display != 'none' ) {
 		this.style.display = 'none';
 	}
@@ -365,7 +362,7 @@ Element.prototype.createText = function(text) {
 };
 
 
-Element.prototype.createNBSP = function() {
+Element.prototype.createNBSP = function () {
 	this.appendChild(document.createTextNode("\u00a0"));
 };
 
@@ -382,14 +379,14 @@ Element.prototype.create = function(tagNamePath) {
 };
 
 
-Element.prototype.createEntryList = function() {
+Element.prototype.createEntryList = function () {
     var result = this.create("small/ul");
     result.style.listStyle = "square outside none";
     return result;
 };
 
 
-app.printFailedTitles = function() {
+app.printFailedTitles = function () {
     // Show all failed titles.
     var allFailedTitles = "";
     for (var i = 0; i < app.failedTitles.length; i++)
@@ -404,7 +401,7 @@ app.printFailedTitles = function() {
 };
 
 
-app.getNext = function() {
+app.getNext = function () {
     if (app.links.length === 0) {
         app.updateScore();
         //app.printFailedTitles();
@@ -434,13 +431,13 @@ app.getNext = function() {
 };
 
 
-app.isYearList = function() {
+app.isYearList = function () {
     return app.getPageType() === "anime" ||
            app.getPageType() === "manga";
 };
 
 
-app.getAnimeTitleFromPage = function() {
+app.getAnimeTitleFromPage = function () {
     var titles = document.getElementsByTagName("title");
     if (titles.length === 0) {
         throw "No title tag found in page. Can't deduce page title.";
@@ -462,7 +459,7 @@ app.getAnimeTitleFromPage = function() {
  * Get the link to www.animenewsnetwork.com.
  * Returns null if not found.
  */
-app.getANNLinks = function() {
+app.getANNLinks = function () {
     var result = [];
     var links = document.getElementsByTagName("a");
     for (var i = 0; i < links.length; ++i) {
@@ -477,7 +474,7 @@ app.getANNLinks = function() {
 };
 
 
-app.getPageTypeFromInfoBox = function() {
+app.getPageTypeFromInfoBox = function () {
     var foundAnime = false;
     var foundManga = false;
     var tables = document.getElementsByTagName("table");
@@ -525,7 +522,7 @@ app.getPageTypeFromInfoBox = function() {
 };
 
 
-app.getPageTypeFromANNLinks = function() {
+app.getPageTypeFromANNLinks = function () {
     app.annLinks = app.getANNLinks();
 
     var foundAnime = false;
@@ -562,7 +559,7 @@ app.getPageTypeFromANNLinks = function() {
 };
 
 
-app.getPageType = function() {
+app.getPageType = function () {
     if (document.URL.toLowerCase().search(/category:.*anime/) !== -1) {
         return "anime";
     }
@@ -577,14 +574,14 @@ app.getPageType = function() {
 app.workerCount = 5;
 app.idleWorkers = 0;
 
-app.insertRatingsIntoList = function() {
+app.insertRatingsIntoList = function () {
     for (var i = 0; i < app.workerCount; ++i) {
         app.getNext(app.links);
     }
 };
 
 
-app.addMALRatingsIntoAnimePageDOM = function() {
+app.addMALRatingsIntoAnimePageDOM = function () {
     var title = app.improveTitle(app.getAnimeTitleFromPage());
     this.getMALInfo("anime", title, function(linkInfo) {
         app.linkInfo = linkInfo;
@@ -603,7 +600,7 @@ app.addMALRatingsIntoAnimePageDOM = function() {
 };
 
 
-app.insertRatingsIntoPage = function() {
+app.insertRatingsIntoPage = function () {
     app.addMALRatingsIntoAnimePageDOM();
 };
 
@@ -658,7 +655,7 @@ app.getInfoBox = function(bodyContent) {
 };
 
 
-app.getFirstParagraph = function() {
+app.getFirstParagraph = function () {
     var bodyContent = document.getElementById("bodyContent");
 
     // Get first paragraph *after* the infobox.
@@ -708,7 +705,7 @@ app.addRatingIntoAnimePageDOM = function(linkInfo) {
     app.hideButton.href = '#';
     td.createText("]");
     app.hideButton.innerText = "hide";
-    app.hideButton.onclick = function() {
+    app.hideButton.onclick = function () {
         app.malInfoBox.toggle();
         app.hideButton.innerText = app.malInfoBox.style.display === "none" ? "show" : "hide";
     };
@@ -784,7 +781,7 @@ app.addRatingIntoAnimePageDOM = function(linkInfo) {
 };
 
 
-app.insertSettingsBox = function() {
+app.insertSettingsBox = function () {
     var table = document.createElement("table");
     table.className = "toc";
     table.setAttribute("style", "float:none;");
@@ -812,7 +809,7 @@ app.insertSettingsBox = function() {
     app.hideButton.href = '#';
     td_head.createText("]");
     app.hideButton.innerText = "hide";
-    app.hideButton.onclick = function() {
+    app.hideButton.onclick = function () {
         app.malInfoBox.toggle();
         app.hideButton.innerText = app.malInfoBox.style.display === "none" ? "show" : "hide";
     };
@@ -868,7 +865,7 @@ app.string2float = function(value, defaultValue) {
 };
 
 
-app.getVisibilityTreshold = function() {
+app.getVisibilityTreshold = function () {
     var result = app.string2float(app.visibilitySpinButton.value, app.visibilityTreshold);
     if (result < 0 || result > 10) {
         result = app.visibilityTreshold;
@@ -878,7 +875,7 @@ app.getVisibilityTreshold = function() {
 };
 
 
-app.getHighlightTreshold = function() {
+app.getHighlightTreshold = function () {
     var result = app.string2float(app.highlightSpinButton.value, app.highlightTreshold);
     if (result < 0 || result > 10) {
         result = app.highlightTreshold;
@@ -898,7 +895,7 @@ app.setHighlightTreshold = function(highlightTreshold) {
 };
 
 
-app.isVisibilityTresholdChanged = function() {
+app.isVisibilityTresholdChanged = function () {
     if (app.visibilityTreshold !== app.getVisibilityTreshold()) {
         app.visibilityTreshold = app.getVisibilityTreshold();
         app.setLocalStorage("visibilityTreshold", app.visibilityTreshold);
@@ -910,7 +907,7 @@ app.isVisibilityTresholdChanged = function() {
 };
 
 
-app.isHighlightTresholdChanged = function() {
+app.isHighlightTresholdChanged = function () {
     if (app.highlightTreshold !== app.getHighlightTreshold()) {
         app.highlightTreshold = app.getHighlightTreshold();
         app.setLocalStorage("highlightTreshold", app.highlightTreshold);
@@ -931,7 +928,7 @@ app.updateScoreLoopIsRunning = false;
 app.forceUpdateScore = false;
 
 
-app.updateScore = function() {
+app.updateScore = function () {
     app.forceUpdateScore = true;
 
     if (app.updateScoreLoopIsRunning === false) {
@@ -941,7 +938,7 @@ app.updateScore = function() {
 };
 
 
-app.updateScoreImpl = function() {
+app.updateScoreImpl = function () {
     if (app.forceUpdateScore === true ||
         app.isHighlightTresholdChanged() ||
         app.isVisibilityTresholdChanged())
@@ -1087,7 +1084,7 @@ if (app.malQueryInfo === undefined) {
     });
 }
 
-app.run = function() {
+app.run = function () {
     if (app.isYearList()) {
         app.trackEvent({ category: 'YearList', action: 'Loaded', label: document.URL });
         app.insertSettingsBox();
