@@ -11,13 +11,13 @@ try {
   }
 
 
-// Manifest info object
-  chrome.manifest = (function() {
+  // Manifest info object
+  chrome.manifest = (function () {
 
-    var manifestObject = false;
+    var manifestObject = "";
     var xhr = new XMLHttpRequest();
 
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function () {
       if (xhr.readyState == 4) {
         manifestObject = JSON.parse(xhr.responseText);
       }
@@ -26,24 +26,23 @@ try {
 
     try {
       xhr.send();
-    } catch(e) {
+    } catch (e) {
       console.log('Couldn\'t load manifest.json');
     }
 
     return manifestObject;
-
   })();
 
   function performHTTPGETRequest(url, auth, callback) {
     var http = new window.XMLHttpRequest();
-    http.onreadystatechange = function() {
+    http.onreadystatechange = function () {
       if (http.readyState == 4) {
         if (http.status == 200) {
-          callback({success: true, value: http.responseText});
+          callback({success:true, value:http.responseText});
         }
         else {
           console.log("Failure (" + http.status + "): " + url);
-          callback({success: false, value: http.status});
+          callback({success:false, value:http.status});
         }
       }
     };
@@ -63,7 +62,7 @@ try {
   function searchMAL(pageType, title, callback) {
     var auth = "Basic QW5pbWVSYXRpbmdzOkNocm9tZQ==";
     var url = getURL(pageType, title);
-    performHTTPGETRequest(url, auth, function(response) {
+    performHTTPGETRequest(url, auth, function (response) {
       callback(response);
     });
   }
@@ -82,14 +81,14 @@ try {
   function getMalQueryInfo(callback) {
     var url = "http://stacked-crooked.googlecode.com/svn/trunk/Playground/AnimeRatings/ChromePlugin/config/malQuery.json";
     var key = JSON.stringify({
-      name: "MalQueryInfo",
-      week: getWeekCounter(),
-      version: chrome.manifest.version
+      name:"MalQueryInfo",
+      week:getWeekCounter(),
+      version:chrome.manifest.version
     });
     var value = localStorage.getItem(key);
     if (value === null) {
       console.log("Key '" + key + "' not in cache => perform API call.");
-      performHTTPGETRequest(url, "", function(response) {
+      performHTTPGETRequest(url, "", function (response) {
         setLocalStorage(key, JSON.stringify(response));
         callback(response);
       });
@@ -136,11 +135,11 @@ try {
       return;
     }
 
-    searchMAL(arg.pageType, arg.title, function(response) {
+    searchMAL(arg.pageType, arg.title, function (response) {
 
       var result = {
-        success: false,
-        entries : []
+        success:false,
+        entries:[]
       };
 
       if (response.success === false) {
@@ -175,13 +174,13 @@ try {
           start_dates.length === 1 && end_dates.length === 1 && types.length === 1) {
 
           var entry = {
-            pageType: arg.pageType,
-            title: getInnerText(titles[0]).replace(/%26/g, "&"),
-            score: getInnerText(scores[0]),
-            id: getInnerText(ids[0]),
-            start_date : getInnerText(start_dates[0]),
-            end_date : getInnerText(end_dates[0]),
-            type : getInnerText(types[0])
+            pageType:arg.pageType,
+            title:getInnerText(titles[0]).replace(/%26/g, "&"),
+            score:getInnerText(scores[0]),
+            id:getInnerText(ids[0]),
+            start_date:getInnerText(start_dates[0]),
+            end_date:getInnerText(end_dates[0]),
+            type:getInnerText(types[0])
           };
 
           result.entries.push(entry);
@@ -205,7 +204,7 @@ try {
     });
   }
 
-  chrome.extension.onMessage.addListener( function(request, sender, callback) {
+  chrome.extension.onMessage.addListener(function (request, sender, callback) {
 
     if (request.action === "log") {
       console.log(request.arg);
@@ -226,6 +225,6 @@ try {
     return true;
   });
 
-}catch(exc) {
+} catch (exc) {
   console.log(exc);
 }
