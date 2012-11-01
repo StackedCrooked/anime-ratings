@@ -1,5 +1,6 @@
 Todo
 ----
+- Display a list of yearly anime by ordered by descending rating (The top 10 so to speak.)
 - Fix localstorage limits.
 - Remove hard-coded mappings.
 - Use [+] and [-] to expand and collapse the ratings that go with a title.
