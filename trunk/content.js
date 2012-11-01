@@ -241,12 +241,12 @@ app.getYear = function () {
 app.addEntryToDOM = function (parent, entry, pattern) {
   "use strict";
 
-  parent = parent.create("li");
+  parent = parent.createChild("li");
 
   parent.setAttribute("score", entry.score);
   app.malLinks.push(parent);
 
-  parent = parent.create("a");
+  parent = parent.createChild("a");
   parent.setAttribute("href", "http://myanimelist.net/" + this.getPageType() + "/" + entry.id);
 
   var result = pattern;
@@ -264,7 +264,7 @@ app.informFailure = function (node, linkItem) {
   "use strict";
   var reason = (linkItem.reason === undefined ? "No results returned." : linkItem.reason);
   var parent = node.parentNode;
-  var li = parent.createEntryList().create("li");
+  var li = parent.createEntryList().createChild("li");
   li.createText(reason);
   app.failedLis.push(li);
 };
@@ -314,7 +314,7 @@ app.addEntriesToDOM = function (node, linkItem) {
   }
 
   if (parent.hasAttribute("private_year_is_wrong") && parent.getElementsByTagName("li").length === 0) {
-    parent.create("li").createText("No " + app.getPageType() + " titles returned from " + year + ".");
+    parent.createChild("li").createText("No " + app.getPageType() + " titles returned from " + year + ".");
   }
 };
 
@@ -381,7 +381,7 @@ Element.prototype.createNBSP = function () {
 };
 
 
-Element.prototype.create = function (tagNamePath) {
+Element.prototype.createChild = function (tagNamePath) {
   "use strict";
   var result = this;
   var tagNames = tagNamePath.split("/");
@@ -396,7 +396,7 @@ Element.prototype.create = function (tagNamePath) {
 
 Element.prototype.createEntryList = function () {
   "use strict";
-  var result = this.create("small/ul");
+  var result = this.createChild("small/ul");
   result.style.listStyle = "square outside none";
   return result;
 };
@@ -698,22 +698,22 @@ app.addRatingIntoAnimePageDOM = function (linkInfo) {
   var firstParagraph = app.getFirstParagraph();
 
   var node = firstParagraph.parentNode.insertBefore(document.createElement("div"), firstParagraph);
-  node = node.create("table");
+  node = node.createChild("table");
   node.setAttribute("style", "margin: 0.5em 0 0.5em 1em; padding: 0.2em;");
   node.setAttribute("class", "toc");
 
-  var td = node.create("tr/td");
+  var td = node.createChild("tr/td");
   td.setAttribute("style", "text-align: center;");
-  var table_title = td.create("a");
+  var table_title = td.createChild("a");
   table_title.href = "http://chrome.google.com/webstore/detail/aneeljmnclggefejjbbbbploekjpfejc";
-  table_title.create("strong").createText("Anime Ratings");
+  table_title.createChild("strong").createText("Anime Ratings");
 
   td.createNBSP();
   td.createNBSP();
-  td = td.create("span");
+  td = td.createChild("span");
   td.setAttribute("class", "toctoggle");
   td.createText("[");
-  app.hideButton = td.create("a");
+  app.hideButton = td.createChild("a");
   app.hideButton.href = '#';
   td.createText("]");
   app.hideButton.innerText = "hide";
@@ -722,23 +722,23 @@ app.addRatingIntoAnimePageDOM = function (linkInfo) {
     app.hideButton.innerText = app.malInfoBox.style.display === "none" ? "show" : "hide";
   };
 
-  var table = node.create("table");
+  var table = node.createChild("table");
   app.malInfoBox = table;
 
-  tr = table.create("tr");
+  tr = table.createChild("tr");
 
   tr.setAttribute("style", "text-align: center;");
-  td = tr.create("td").create("b");
+  td = tr.createChild("td").createChild("b");
   td.createText("Year");
 
-  td = tr.create("td").create("b");
+  td = tr.createChild("td").createChild("b");
   td.createText("Title");
 
-  td = tr.create("td").create("b");
+  td = tr.createChild("td").createChild("b");
   td.createText("Type");
 
-  td = tr.create("td");
-  td.create("b").createText("Rating");
+  td = tr.createChild("td");
+  td.createChild("b").createText("Rating");
 
   for (var i = 0; i < linkInfo.entries.length; ++i) {
 
@@ -757,8 +757,8 @@ app.addRatingIntoAnimePageDOM = function (linkInfo) {
       endYear = "ongoing";
     }
 
-    tr = table.create("tr");
-    var td_year = tr.create("td");
+    tr = table.createChild("tr");
+    var td_year = tr.createChild("td");
     td_year.setAttribute("style", "text-align: center;");
     var year = startYear;
 
@@ -770,21 +770,21 @@ app.addRatingIntoAnimePageDOM = function (linkInfo) {
     td_year.createText(year);
 
     // Title
-    var td_title = tr.create("td/i/a");
+    var td_title = tr.createChild("td/i/a");
     td_title.setAttribute("style", "text-align: left;");
     td_title.setAttribute("href", "http://myanimelist.net/" + entry.pageType + "/" + entry.id);
     td_title.createText(this.htmlDecode(this.fixUnicode(this.encodeResult(entry.title))));
 
     // Type
-    var td_type = tr.create("td");
+    var td_type = tr.createChild("td");
     td_type.setAttribute("style", "text-align: center;");
     td_type.createText(entry.type);
 
     // Score
-    var td_score = tr.create("td");
+    var td_score = tr.createChild("td");
     td_score.setAttribute("style", "text-align: center;");
     if (parseFloat(entry.score, 10) >= 8) {
-      td_score = td_score.create("strong");
+      td_score = td_score.createChild("strong");
     }
     td_score.createText(entry.score !== "0.00" ? entry.score : "(none)");
 
@@ -800,23 +800,23 @@ app.insertSettingsBox = function () {
   var mwPages = app.getMWPages();
   mwPages.insertBefore(table, mwPages.firstChild.nextSibling.nextSibling.nextSibling.nextSibling);
 
-  table = table.create("tbody");
+  table = table.createChild("tbody");
 
-  var tr = table.create("tr");
+  var tr = table.createChild("tr");
 
-  var td_head = tr.create("td");
+  var td_head = tr.createChild("td");
   td_head.setAttribute("style", "text-align: center;");
 
-  var title_link = td_head.create("a");
-  title_link.create("strong").createText("Anime Ratings");
+  var title_link = td_head.createChild("a");
+  title_link.createChild("strong").createText("Anime Ratings");
   title_link.href = "http://chrome.google.com/webstore/detail/aneeljmnclggefejjbbbbploekjpfejc";
 
   td_head.createNBSP();
   td_head.createNBSP();
-  td_head = td_head.create("span");
+  td_head = td_head.createChild("span");
   td_head.setAttribute("class", "toctoggle");
   td_head.createText("[");
-  app.hideButton = td_head.create("a");
+  app.hideButton = td_head.createChild("a");
   app.hideButton.href = '#';
   td_head.createText("]");
   app.hideButton.innerText = "hide";
@@ -825,18 +825,18 @@ app.insertSettingsBox = function () {
     app.hideButton.innerText = app.malInfoBox.style.display === "none" ? "show" : "hide";
   };
 
-  table = table.create("table");
+  table = table.createChild("table");
   app.malInfoBox = table;
 
-  tr = table.create("tr");
-  var td = tr.create("td");
+  tr = table.createChild("tr");
+  var td = tr.createChild("td");
   td.setAttribute("style", "vertical-align:middle;");
   td.createText("Visibility treshold: ");
 
   var spinButtonWidth = "40px";
 
-  td = tr.create("td");
-  app.visibilitySpinButton = td.create("input");
+  td = tr.createChild("td");
+  app.visibilitySpinButton = td.createChild("input");
   app.visibilitySpinButton.name = "VisibilityTreshold";
   app.visibilitySpinButton.type = "number";
   app.visibilitySpinButton.min = "0";
@@ -847,13 +847,13 @@ app.insertSettingsBox = function () {
   var visibilityTreshold = localStorage["visibilityTreshold"];
   app.setVisibilityTreshold((visibilityTreshold !== undefined) ? visibilityTreshold : app.visibilityTreshold);
 
-  tr = table.create("tr");
-  td = tr.create("td");
+  tr = table.createChild("tr");
+  td = tr.createChild("td");
   td.setAttribute("style", "vertical-align:middle;");
   td.createText("Highlight treshold: ");
 
-  td = tr.create("td");
-  app.highlightSpinButton = td.create("input");
+  td = tr.createChild("td");
+  app.highlightSpinButton = td.createChild("input");
   app.highlightSpinButton.name = "HighlightTreshold";
   app.highlightSpinButton.type = "number";
   app.highlightSpinButton.min = "0";
