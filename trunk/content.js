@@ -10,7 +10,6 @@ app.annLinks = [];
 /**
  * downloadURL performs simple blocking HTTP GET request and returns the result.
  */
-/* currrently unused
 function downloadURL(url) {
   var hiddenIFrameID = 'hiddenDownloader';
   var iframe = document.getElementById(hiddenIFrameID);
@@ -21,19 +20,19 @@ function downloadURL(url) {
     document.body.appendChild(iframe);
   }
   iframe.src = url;
-}*/
+}
 
 
-app.sendRequest = function(arg, callback) {
+app.sendMessage = function(arg, callback) {
 
-    chrome.extension.sendRequest(arg, function(response) {
+    chrome.extension.sendMessage(arg, function(response) {
         callback(response);
     });
 };
 
 
 app.log = function(message) {
-    this.sendRequest(
+    this.sendMessage(
         {action: "log", arg: message},
         function() {}
     );
@@ -42,7 +41,7 @@ app.log = function(message) {
 
 //! @param arg example is { category: 'Configuration', action: 'Changed', label: "Visibility treshold" , value: app.visibilityTreshold }
 app.trackEvent = function (args) {
-    this.sendRequest({action:"trackEvent", arg:args});
+    this.sendMessage({action:"trackEvent", arg:args});
 };
 
 
@@ -62,7 +61,7 @@ app.getMALInfo = function(pageType, title, callback) {
     var linkInfo = {};
     linkInfo.title = title;
     linkInfo.pageType = pageType;
-    this.sendRequest(
+    this.sendMessage(
         {action: "getMalInfo", arg: linkInfo},
         function(linkInfo) {
             callback(linkInfo);
@@ -72,7 +71,7 @@ app.getMALInfo = function(pageType, title, callback) {
 
 
 app.getMalQueryInfo = function(callback) {
-    this.sendRequest({action: "getMalQueryInfo", arg: {}}, callback);
+    this.sendMessage({action: "getMalQueryInfo", arg: {}}, callback);
 };
 
 
