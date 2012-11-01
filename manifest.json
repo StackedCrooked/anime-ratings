@@ -1,19 +1,25 @@
 {
-    "name": "Anime Ratings",
-    "version": "24",
-    "description": "Updates anime pages on Wikipedia with ratings from myanimelist.net.",
-    "permissions": [ "http://myanimelist.net/api/anime/search.xml",
-                     "http://stacked-crooked.googlecode.com/*" ],
-    "icons": {
-        "16": "icon16.png",
-        "48": "icon48.png",
-        "128": "icon128.png"
-    },
-    "background_page": "background.html",
-    "content_scripts": [ {
-        "matches": [ "http://en.wikipedia.org/*" ],
-          "run_at": "document_end",
-          "js": ["content.js"]
-        }
-    ]
+  "name":"Anime Ratings",
+  "manifest_version":2,
+  "version":"25",
+  "description":"Updates anime pages on Wikipedia with ratings from myanimelist.net.",
+  "permissions":[ "http://myanimelist.net/api/anime/search.xml",
+    "http://stacked-crooked.googlecode.com/*" ],
+  "content_security_policy":"script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
+  "icons":{
+    "16":"icon16.png",
+    "48":"icon48.png",
+    "128":"icon128.png"
+  },
+  "background":{
+    "scripts":["eventPage.js", "analytics.js"],
+    "persistent":false
+  },
+  "content_scripts":[
+    {
+      "matches":[ "http://en.wikipedia.org/*" ],
+      "run_at":"document_end",
+      "js":["content.js"]
+    }
+  ]
 }
