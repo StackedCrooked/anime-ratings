@@ -46,6 +46,15 @@ app.setLocalStorage = function (key, value) {
 app.getMALInfo = function (pageType, title, callback) {
   "use strict";
   var linkInfo = {};
+  /*var words = title.split(" ");
+  var longestWord = "";
+  for (var i = 0; i !== words.length; ++i) {
+    if (words[i].length > longestWord.length) {
+      longestWord = words[i];
+    }
+  }
+  linkInfo.title = longestWord;
+  */
   linkInfo.title = title;
   linkInfo.pageType = pageType;
   this.sendMessage({action: "getMalInfo", arg: linkInfo}, function (linkInfo) {
