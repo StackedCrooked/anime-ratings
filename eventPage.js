@@ -78,7 +78,7 @@ function performHTTPGETRequest(url, auth, callback) {
 
 function getURL(pageType, title) {
   "use strict";
-  return "http://myanimelist.net/api/" + pageType + "/search.xml?q=" + encodeURIComponent(title);
+  return "https://myanimelist.net/api/" + pageType + "/search.xml?q=" + encodeURIComponent(title);
 }
 
 function searchMAL(pageType, title, callback) {
@@ -238,3 +238,4 @@ chrome.extension.onMessage.addListener(function (request, sender, callback) {
   }
   return true;
 });
+
