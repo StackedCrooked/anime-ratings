@@ -1,7 +1,7 @@
 {
   "name": "Anime Ratings",
   "manifest_version": 2,
-  "version": "32",
+  "version": "31",
   "description": "Adds MyAnimeList ratings to corresponding Wikipedia pages and to Wikpedia lists of anime.",
   "permissions": [
     "http://myanimelist.net/api/anime/search.xml",
