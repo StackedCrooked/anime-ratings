@@ -10,7 +10,6 @@ _gaq.push(['_trackPageview']);
 
 
 (function () {
-  "use strict";
   var ga, s;
   ga = document.createElement('script');
   ga.type = 'text/javascript';
@@ -21,7 +20,6 @@ _gaq.push(['_trackPageview']);
 }());
 
 function trackEvent(arg) {
-  "use strict";
   if (arg.value !== undefined) {
     _gaq.push(['_trackEvent', arg.category, arg.action, arg.label, arg.value]);
   } else {
@@ -33,7 +31,6 @@ function trackEvent(arg) {
 // Manifest info object
 //noinspection JSUnresolvedVariable
 window.chrome.manifest = (function () {
-  "use strict";
 
   var manifestObject = "";
   var xhr = new XMLHttpRequest();
@@ -55,7 +52,6 @@ window.chrome.manifest = (function () {
 }());
 
 function performHTTPGETRequest(url, auth, callback) {
-  "use strict";
   var http = new window.XMLHttpRequest();
   http.onreadystatechange = function () {
     if (http.readyState === 4) {
@@ -77,12 +73,10 @@ function performHTTPGETRequest(url, auth, callback) {
 }
 
 function getURL(pageType, title) {
-  "use strict";
   return "https://myanimelist.net/api/" + pageType + "/search.xml?q=" + encodeURIComponent(title);
 }
 
 function searchMAL(pageType, title, callback) {
-  "use strict";
   var auth = "Basic QW5pbWVSYXRpbmdzOkNocm9tZQ==";
   var url = getURL(pageType, title);
   performHTTPGETRequest(url, auth, function (response) {
@@ -91,7 +85,6 @@ function searchMAL(pageType, title, callback) {
 }
 
 function setLocalStorage(key, value) {
-  "use strict";
   try {
     localStorage.setItem(key, value);
   } catch (exc) {
@@ -102,22 +95,18 @@ function setLocalStorage(key, value) {
 }
 
 function getEpochSeconds() {
-  "use strict";
   return Math.floor(new Date().getTime() / 1000);
 }
 
 function getWeekCounter() {
-  "use strict";
   return Math.floor(getEpochSeconds() / (7 * 24 * 3600));
 }
 
 function getCacheKey(pageType, title) {
-  "use strict";
   return "version: " + window.chrome.manifest.version + ", age: " + getWeekCounter() + ", page_type: " + pageType + ", title: " + title;
 }
 
 function getMalQueryInfo(callback) {
-  "use strict";
   var url = "http://stacked-crooked.googlecode.com/svn/trunk/Playground/AnimeRatings/ChromePlugin/config/malQuery.json";
   var key = JSON.stringify({
     name: "MalQueryInfo",
@@ -137,7 +126,6 @@ function getMalQueryInfo(callback) {
 }
 
 function getInnerText(node) {
-  "use strict";
   if (node.childNodes.length === 0) {
     return "";
   }
@@ -145,7 +133,6 @@ function getInnerText(node) {
 }
 
 function getMalInfo(arg, callback) {
-  "use strict";
   var cacheValue = localStorage.getItem(getCacheKey(arg.pageType, arg.title));
   if (cacheValue !== null) {
     var result = JSON.parse(cacheValue);
@@ -222,7 +209,6 @@ function getMalInfo(arg, callback) {
 }
 
 chrome.extension.onMessage.addListener(function (request, sender, callback) {
-  "use strict";
 
   if (request.action === "log") {
     console.log(request.arg);

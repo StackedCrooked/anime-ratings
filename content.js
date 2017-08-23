@@ -8,7 +8,6 @@ app.annLinks = [];
 
 
 app.sendMessage = function(arg, callback) {
-    "use strict";
     chrome.extension.sendMessage(arg, function(response) {
 
         callback(response);
@@ -17,7 +16,6 @@ app.sendMessage = function(arg, callback) {
 
 
 app.log = function(message) {
-    "use strict";
     this.sendMessage({
         action: "log",
         arg: message
@@ -27,7 +25,6 @@ app.log = function(message) {
 
 //! @param arg example is { category: 'Configuration', action: 'Changed', label: "Visibility treshold" , value: app.visibilityTreshold }
 app.trackEvent = function(args) {
-    "use strict";
     this.sendMessage({
         action: "trackEvent",
         arg: args
@@ -36,7 +33,6 @@ app.trackEvent = function(args) {
 
 
 app.setLocalStorage = function(key, value) {
-    "use strict";
     try {
         localStorage.setItem(key, value);
     } catch (exc) {
@@ -48,7 +44,6 @@ app.setLocalStorage = function(key, value) {
 
 
 app.getMALInfo = function(pageType, title, callback) {
-    "use strict";
     var linkInfo = {};
     /*var words = title.split(" ");
     var longestWord = "";
@@ -71,7 +66,6 @@ app.getMALInfo = function(pageType, title, callback) {
 
 
 app.getMalQueryInfo = function(callback) {
-    "use strict";
     this.sendMessage({
         action: "getMalQueryInfo",
         arg: {}
@@ -80,7 +74,6 @@ app.getMalQueryInfo = function(callback) {
 
 
 app.getMWPages = function() {
-    "use strict";
     var i, divs;
     divs = document.getElementsByTagName("div");
     for (i = 0; i < divs.length; i += 1) {
@@ -96,7 +89,6 @@ app.debugLink = "";
 
 
 app.getLinks = function() {
-    "use strict";
     var i, result;
     result = [];
     try {
@@ -120,7 +112,6 @@ app.getLinks = function() {
  * Make the text "innerHTML"-compatible.
  */
 app.encodeResult = function(text) {
-    "use strict";
     var i, result, keys, values;
     result = text;
     keys = [];
@@ -177,7 +168,6 @@ app.encodeResult = function(text) {
  * @param input
  */
 app.htmlDecode = function(input) {
-    "use strict";
     var e = document.createElement('div');
     e.innerHTML = input;
     return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
@@ -185,7 +175,6 @@ app.htmlDecode = function(input) {
 
 
 app.findAndReplace = function(input, mapping) {
-    "use strict";
     var key, result;
     result = input;
     for (key in mapping) {
@@ -214,7 +203,6 @@ app.findAndReplace = function(input, mapping) {
  * for common cases.
  */
 app.fixUnicode = function(input) {
-    "use strict";
     var result = input;
 
     // First apply a mapping of composed keys
@@ -236,7 +224,6 @@ app.fixUnicode = function(input) {
 
 
 app.getYear = function() {
-    "use strict";
     var categorySplit = document.URL.split("Category:");
     if (categorySplit.length < 2) {
         return "";
@@ -258,7 +245,6 @@ app.getYear = function() {
  * @pattern  String  "{Year} {Title} {Score}"
  */
 app.addEntryToDOM = function(parent, entry, pattern) {
-    "use strict";
 
     parent = parent.createChild("li");
 
@@ -280,7 +266,6 @@ app.addEntryToDOM = function(parent, entry, pattern) {
 
 
 app.informFailure = function(node, linkItem) {
-    "use strict";
     var reason = (linkItem.reason === undefined ? "No results returned." : linkItem.reason);
     var parent = node.parentNode;
     var li = parent.createEntryList().createChild("li");
@@ -290,9 +275,8 @@ app.informFailure = function(node, linkItem) {
 
 
 app.addEntriesToDOM = function(node, linkItem) {
-    "use strict";
-    var parent = node.parentNode;
 
+    var parent = node.parentNode;
 
     var entries = linkItem.entries;
     app.sortEntriesByDate(entries);
@@ -342,7 +326,6 @@ app.addEntriesToDOM = function(node, linkItem) {
  * Workaround: improves search results
  */
 app.improveTitle = function(title) {
-    "use strict";
 
     var result = title;
 
@@ -379,7 +362,6 @@ app.improveTitle = function(title) {
 
 
 Element.prototype.toggle = function() {
-    "use strict";
     if (this.style.display != 'none') {
         this.style.display = 'none';
     } else {
@@ -389,19 +371,16 @@ Element.prototype.toggle = function() {
 
 
 Element.prototype.createText = function(text) {
-    "use strict";
     this.appendChild(document.createTextNode(text));
 };
 
 
 Element.prototype.createNBSP = function() {
-    "use strict";
     this.appendChild(document.createTextNode("\u00a0"));
 };
 
 
 Element.prototype.createChild = function(tagNamePath) {
-    "use strict";
     var result = this;
     var tagNames = tagNamePath.split("/");
     for (var i = 0; i < tagNames.length; ++i) {
@@ -414,7 +393,6 @@ Element.prototype.createChild = function(tagNamePath) {
 
 
 Element.prototype.createEntryList = function() {
-    "use strict";
     var result = this.createChild("small/ul");
     result.style.listStyle = "square outside none";
     return result;
@@ -422,7 +400,6 @@ Element.prototype.createEntryList = function() {
 
 
 app.printFailedTitles = function() {
-    "use strict";
     // Show all failed titles.
     var allFailedTitles = "";
     for (var i = 0; i < app.failedTitles.length; i++) {
@@ -436,7 +413,6 @@ app.printFailedTitles = function() {
 
 
 app.getNext = function() {
-    "use strict";
     if (app.links.length === 0) {
         app.updateScore();
         //app.printFailedTitles();
@@ -455,7 +431,6 @@ app.getNext = function() {
             if (linkInfo.success === true) {
                 app.addEntriesToDOM(node, linkInfo);
                 app.getNext();
-                app.log("SUCCESS!")
             } else {
                 app.failedTitles.push(title);
                 app.informFailure(node, linkInfo);
@@ -464,6 +439,7 @@ app.getNext = function() {
                 // So in case of failure we start slowing down a little bit.
                 setTimeout(function() {
                     app.log("Error has occurred. Starting backoff to avoid error flows. (backoff is now" + app.backoff + "ms)");
+                    app.getNext();
                     app.backoff *= 1.1;
                 }, app.backoff);
             }
@@ -475,13 +451,11 @@ app.getNext = function() {
 
 
 app.isYearList = function() {
-    "use strict";
     return app.getPageType() === "anime" || app.getPageType() === "manga";
 };
 
 
 app.getAnimeTitleFromPage = function() {
-    "use strict";
     var titles = document.getElementsByTagName("title");
     if (titles.length === 0) {
         throw "No title tag found in page. Can't deduce page title.";
@@ -504,7 +478,6 @@ app.getAnimeTitleFromPage = function() {
  * Returns null if not found.
  */
 app.getANNLinks = function() {
-    "use strict";
     var result = [];
     var links = document.getElementsByTagName("a");
     for (var i = 0; i < links.length; ++i) {
@@ -519,7 +492,6 @@ app.getANNLinks = function() {
 
 
 app.getPageTypeFromInfoBox = function() {
-    "use strict";
     var foundAnime = false;
     var foundManga = false;
     var tables = document.getElementsByTagName("table");
@@ -613,8 +585,9 @@ app.getPageType = function() {
     }
 };
 
-app.workerCount = 5;
-app.idleWorkers = 0;
+
+app.workerCount = 1;
+
 
 app.insertRatingsIntoList = function() {
     for (var i = 0; i < app.workerCount; ++i) {
