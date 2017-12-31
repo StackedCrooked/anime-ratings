@@ -421,7 +421,7 @@ app.getNext = function() {
 
     var linkNode = app.links.pop();
 
-    app.backoff = 10; // milliseconds
+    app.backoff = 1000; // milliseconds
 
     var title = app.improveTitle(linkNode.title);
     if (app.linkNodes[title] === undefined) {
@@ -440,7 +440,7 @@ app.getNext = function() {
                 setTimeout(function() {
                     app.log("Error has occurred. Starting backoff to avoid error flows. (backoff is now" + app.backoff + "ms)");
                     app.getNext();
-                    app.backoff *= 1.1;
+                    app.backoff *= 1.5;
                 }, app.backoff);
             }
         });
@@ -586,7 +586,7 @@ app.getPageType = function() {
 };
 
 
-app.workerCount = 1;
+app.workerCount = 5;
 
 
 app.insertRatingsIntoList = function() {
