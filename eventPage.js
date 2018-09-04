@@ -77,7 +77,7 @@ function getURL(pageType, title) {
 }
 
 function searchMAL(pageType, title, callback) {
-  var auth = "Basic QW5pbWVSYXRpbmdzOkNocm9tZQ==";
+  var auth = "Basic QW5pbWVSYXRpbmdzOkNocm9tZTI=";
   var url = getURL(pageType, title);
   performHTTPGETRequest(url, auth, function (response) {
     callback(response);
